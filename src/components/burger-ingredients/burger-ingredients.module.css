@@ -2,6 +2,7 @@
 	display: flex;
 	flex-direction: column;
 	max-width: 600px;
+	height: 100%;
 	color: var(--text-primary-color);
 	font-family: 'Jet Brains Mono', serif;
 }
@@ -12,4 +13,32 @@
 	padding: 0;
 	text-align: center;
 	list-style-type: none;
+}
+
+.tabContent {
+	overflow-y: auto;
+}
+
+.ingridientsBlock {
+	margin-top: 40px;
+	margin-bottom: 40px;
+}
+
+.ingridientsBlock__list {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	gap: 32px 24px;
+}
+
+.ingridient {
+	position: relative;
+	width: 46%;
+	text-align: center;
+}
+
+.ingridient__pricewrap {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

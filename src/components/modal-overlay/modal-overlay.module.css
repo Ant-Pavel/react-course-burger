@@ -1,0 +1,14 @@
+.modal__overlaybase {
+	position: absolute;
+	inset: 0;
+	background-color: #ffffff;
+}
+
+.modal__overlay {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: rgb(0 0 0 / 60%);
+}
