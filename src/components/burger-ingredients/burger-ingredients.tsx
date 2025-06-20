@@ -1,11 +1,8 @@
 import React from 'react';
 import styles from './burger-ingredients.module.css';
 import { TIngredient } from '@utils/types.ts';
-import {
-	Tab,
-	CurrencyIcon,
-	Counter,
-} from '@ya.praktikum/react-developer-burger-ui-components';
+import { Ingredient } from '../ingredient/ingredient';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 
 type TBurgerIngredientsProps = {
 	ingredients: TIngredient[];
@@ -18,29 +15,23 @@ export const BurgerIngredients = ({
 }: TBurgerIngredientsProps): React.JSX.Element => {
 	console.log(ingredients);
 
-	const { buns, mains } = ingredients.reduce(
+	const ingredientBlocks = ingredients.reduce(
 		(acc, ingredient) => {
 			if (ingredient.type === 'bun') {
-				acc.buns.push(ingredient);
+				if (!acc['Булки']) acc['Булки'] = [];
+				acc['Булки'].push(ingredient);
 			} else if (ingredient.type === 'main') {
-				acc.mains.push(ingredient);
+				if (!acc['Начинки']) acc['Начинки'] = [];
+				acc['Начинки'].push(ingredient);
 			} else if (ingredient.type === 'sauce') {
-				acc.sauces.push(ingredient);
+				if (!acc['Соусы']) acc['Соусы'] = [];
+				acc['Соусы'].push(ingredient);
 			}
 
 			return acc;
 		},
-		{
-			buns: [],
-			mains: [],
-			sauces: [],
-		} as {
-			buns: TIngredient[];
-			mains: TIngredient[];
-			sauces: TIngredient[];
-		}
+		{} as { [key: string]: TIngredient[] }
 	);
-
 	return (
 		<section className={styles.burger_ingredients}>
 			<nav>
@@ -57,52 +48,23 @@ export const BurgerIngredients = ({
 				</ul>
 			</nav>
 			<div className={styles.tabContent}>
-				<div className={styles.ingridientsBlock}>
-					<h2 className='mb-6 text text_type_main-medium'>Булки</h2>
-					<div className={styles.ingridientsBlock__list}>
-						{buns.map((ingredientEl) => (
-							<article
-								key={ingredientEl._id}
-								className={styles.ingridient}
-								onClick={() => onIngredientClick(ingredientEl._id)}>
-								<Counter count={1} size='default' extraClass='m-1' />
-								<img src={ingredientEl.image} alt={ingredientEl.name} />
-								<p className={`${styles.ingridient__pricewrap} pl-2 pr-2`}>
-									<span className='mr-2 text text_type_digits-default'>
-										{ingredientEl.price}
-									</span>
-									<CurrencyIcon type='primary' />
-								</p>
-								<p className='pl-2 pr-2 text text_type_main-default'>
-									{ingredientEl.name}
-								</p>
-							</article>
-						))}
+				{Object.entries(ingredientBlocks).map(([name, ingredients]) => (
+					<div key={name} className={styles.ingridientsBlock}>
+						<h2 className='mb-6 text text_type_main-medium'>{name}</h2>
+						<div className={styles.ingridientsBlock__list}>
+							{ingredients.map((ingredientEl) => (
+								<Ingredient
+									key={ingredientEl._id}
+									onClickHandler={onIngredientClick}
+									id={ingredientEl._id}
+									name={ingredientEl.name}
+									price={ingredientEl.price}
+									image={ingredientEl.image}
+								/>
+							))}
+						</div>
 					</div>
-				</div>
-				<div className={styles.ingridientsBlock}>
-					<h2 className='mb-6 text text_type_main-medium'>Начинки</h2>
-					<div className={styles.ingridientsBlock__list}>
-						{mains.map((ingredientEl) => (
-							<article
-								key={ingredientEl._id}
-								className={styles.ingridient}
-								onClick={() => onIngredientClick(ingredientEl._id)}>
-								<Counter count={1} size='default' extraClass='m-1' />
-								<img src={ingredientEl.image} alt={ingredientEl.name} />
-								<p className={`${styles.ingridient__pricewrap} pl-2 pr-2`}>
-									<span className='mr-2  text text_type_digits-default'>
-										{ingredientEl.price}
-									</span>
-									<CurrencyIcon type='primary' />
-								</p>
-								<p className='pl-2 pr-2 text text_type_main-default'>
-									{ingredientEl.name}
-								</p>
-							</article>
-						))}
-					</div>
-				</div>
+				))}
 			</div>
 		</section>
 	);
