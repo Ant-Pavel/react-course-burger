@@ -13,10 +13,10 @@ export const ModalOverlay = ({
 }: IModalOverlayProps): React.JSX.Element => {
 	return (
 		<div
-			className={styles.modal__overlaybase}
+			className={styles.modal__overlay}
 			onClick={clickHandler}
 			onKeyDown={keyDownHandler}>
-			<div className={styles.modal__overlay}>{children}</div>
+			{children}
 		</div>
 	);
 };

@@ -1,9 +1,3 @@
-.modal__overlaybase {
-	position: absolute;
-	inset: 0;
-	background-color: #ffffff;
-}
-
 .modal__overlay {
 	position: absolute;
 	inset: 0;

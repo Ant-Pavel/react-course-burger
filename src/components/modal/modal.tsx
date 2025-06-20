@@ -6,7 +6,6 @@ import { ModalOverlay } from '../modal-overlay/modal-overlay';
 
 interface IModalProps {
 	children: React.ReactNode;
-	isOpen: boolean;
 	closeHandler: () => void;
 }
 
@@ -14,7 +13,6 @@ const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
 export const Modal = ({
 	children,
-	isOpen,
 	closeHandler,
 }: IModalProps): null | React.JSX.Element => {
 	const handleOverlayKeydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -23,12 +21,10 @@ export const Modal = ({
 	const dialogContentRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		if (isOpen && dialogContentRef && dialogContentRef.current) {
+		if (dialogContentRef && dialogContentRef.current) {
 			dialogContentRef.current.focus();
 		}
-	}, [isOpen]);
-
-	if (!isOpen) return null;
+	}, []);
 
 	return createPortal(
 		<ModalOverlay
