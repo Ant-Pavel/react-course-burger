@@ -25,6 +25,9 @@ export const App = (): React.JSX.Element => {
 		const getIngredients = async () => {
 			try {
 				const response = await fetch(ingredientsUrl);
+				if (!response.ok) {
+					throw new Error(`Ошибка ${response.status}`);
+				}
 				const responseParsed = await response.json();
 				setIngredients(responseParsed.data);
 				await new Promise((r) => setTimeout(r, 500));
@@ -75,18 +78,18 @@ export const App = (): React.JSX.Element => {
 								onCreateOrderClick={onCreateOrderClick}
 							/>
 						</main>
-						<Modal
-							isOpen={isModalOrderOpen}
-							closeHandler={() => setIsModalOrderOpen(false)}>
-							<OrderDetails />
-						</Modal>
-						<Modal
-							isOpen={isModalIngredientOpen}
-							closeHandler={() => setIsModalIngredientOpen(false)}>
-							<IngredientDetails
-								ingredient={currentIngredientDetails as TIngredientDetails}
-							/>
-						</Modal>
+						{isModalOrderOpen && (
+							<Modal closeHandler={() => setIsModalOrderOpen(false)}>
+								<OrderDetails />
+							</Modal>
+						)}
+						{isModalIngredientOpen && (
+							<Modal closeHandler={() => setIsModalIngredientOpen(false)}>
+								<IngredientDetails
+									ingredient={currentIngredientDetails as TIngredientDetails}
+								/>
+							</Modal>
+						)}
 					</>
 				)}
 			</>
