@@ -9,14 +9,20 @@
 .title {
 	align-self: center;
 	width: 100%;
-	max-width: 1260px;
+
+	@media screen and (width >= 1280px) {
+		width: 1280px;
+	}
 }
 
 .main {
 	display: flex;
 	justify-content: space-between;
-	width: 1240px;
-	height: 100%;
 	margin: 0 auto;
-	overflow: hidden;
+	overflow-y: hidden;
+	column-gap: 40px;
+
+	@media screen and (width >= 1280px) {
+		width: 1280px;
+	}
 }
