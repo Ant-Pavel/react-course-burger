@@ -16,6 +16,7 @@
 }
 
 .tabContent {
+	position: relative;
 	overflow-y: auto;
 }
 

@@ -1,5 +1,7 @@
 import React from 'react';
 import styles from './ingredient-details.module.css';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../services/store';
 
 export type TIngredientDetails = {
 	image: string;
@@ -10,13 +12,11 @@ export type TIngredientDetails = {
 	calories: number;
 };
 
-type TIngredientDetailsProps = {
-	ingredient: TIngredientDetails;
-};
+export const IngredientDetails = (): React.JSX.Element => {
+	const ingredient = useSelector(
+		(state: RootState) => state.ingredientDetails.ingredientDetails
+	) as TIngredientDetails;
 
-export const IngredientDetails = ({
-	ingredient,
-}: TIngredientDetailsProps): React.JSX.Element => {
 	return (
 		<div className='pt-3 pb-5'>
 			<p className='mb-8 text text_type_main-large'>Детали ингредиента</p>
