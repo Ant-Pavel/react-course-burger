@@ -1,47 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import styles from './app.module.css';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.tsx';
 import { BurgerConstructor } from '@components/burger-contructor/burger-constructor.tsx';
 import { AppHeader } from '@components/app-header/app-header.tsx';
 import { Modal } from '@components/modal/modal.tsx';
 import { OrderDetails } from '@components/order-details/order-details.tsx';
-import {
-	IngredientDetails,
-	TIngredientDetails,
-} from '@components/ingredient-details/ingredient-details.tsx';
-import { ingredientsUrl } from '@/utils/api';
+import { IngredientDetails } from '@components/ingredient-details/ingredient-details.tsx';
 import { Preloader } from '../preloader/preloader';
 import { TIngredient } from '@utils/types.ts';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchIngredients } from '../../services/ingredients';
+import { sendOrder } from '../../services/order';
+import type { RootState, AppDispatch } from '../../services/store';
+import {
+	setIngredientDetails,
+	clearIngredientDetails,
+} from '../../services/ingredientDetails';
 
 export const App = (): React.JSX.Element => {
 	const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
 	const [isModalIngredientOpen, setIsModalIngredientOpen] = useState(false);
-	const [ingredients, setIngredients] = useState<TIngredient[]>([]);
-	const [isPreloaderShown, setIsPreloaderShown] = useState(true);
-	const [currentIngredientDetails, setCurrentIngredientDetails] =
-		useState<null | TIngredientDetails>(null);
+
+	const dispatch: AppDispatch = useDispatch();
+	const { ingredients, loading: isLoadingIngredients } = useSelector(
+		(state: RootState) => state.ingredients
+	);
+
+	const isSendingOrder = useSelector((state: RootState) => state.order.loading);
 
 	useEffect(() => {
-		const getIngredients = async () => {
-			try {
-				const response = await fetch(ingredientsUrl);
-				if (!response.ok) {
-					throw new Error(`Ошибка ${response.status}`);
-				}
-				const responseParsed = await response.json();
-				setIngredients(responseParsed.data);
-				await new Promise((r) => setTimeout(r, 500));
-			} catch (e) {
-				console.log(e);
-			} finally {
-				setIsPreloaderShown(false);
-			}
-		};
+		dispatch(fetchIngredients());
+	}, [dispatch]);
 
-		getIngredients();
-	}, []);
-
-	const onCreateOrderClick = () => {
+	const onCreateOrderClick = async () => {
+		await dispatch(sendOrder());
 		setIsModalOrderOpen(true);
 	};
 
@@ -49,18 +43,22 @@ export const App = (): React.JSX.Element => {
 		const ingredient = ingredients.find(
 			(ingredientF) => ingredientF._id === id
 		) as TIngredient;
+		dispatch(
+			setIngredientDetails({ ...ingredient, image: ingredient.image_large })
+		);
 		setIsModalIngredientOpen(true);
-		setCurrentIngredientDetails({
-			...ingredient,
-			image: ingredient.image_large,
-		});
+	};
+
+	const onModalIngredientClose = () => {
+		setIsModalIngredientOpen(false);
+		dispatch(clearIngredientDetails());
 	};
 
 	return (
 		<div className={styles.app}>
 			<>
 				<AppHeader />
-				{isPreloaderShown ? (
+				{isLoadingIngredients || isSendingOrder ? (
 					<Preloader />
 				) : (
 					<>
@@ -69,14 +67,16 @@ export const App = (): React.JSX.Element => {
 							Соберите бургер
 						</h1>
 						<main className={`${styles.main} pl-5 pr-5`}>
-							<BurgerIngredients
-								ingredients={ingredients}
-								onIngredientClick={onIngredientClick}
-							/>
-							<BurgerConstructor
-								ingredients={ingredients}
-								onCreateOrderClick={onCreateOrderClick}
-							/>
+							<DndProvider backend={HTML5Backend}>
+								<BurgerIngredients
+									ingredients={ingredients}
+									onIngredientClick={onIngredientClick}
+								/>
+								<BurgerConstructor
+									ingredients={ingredients}
+									onCreateOrderClick={onCreateOrderClick}
+								/>
+							</DndProvider>
 						</main>
 						{isModalOrderOpen && (
 							<Modal closeHandler={() => setIsModalOrderOpen(false)}>
@@ -84,10 +84,8 @@ export const App = (): React.JSX.Element => {
 							</Modal>
 						)}
 						{isModalIngredientOpen && (
-							<Modal closeHandler={() => setIsModalIngredientOpen(false)}>
-								<IngredientDetails
-									ingredient={currentIngredientDetails as TIngredientDetails}
-								/>
+							<Modal closeHandler={onModalIngredientClose}>
+								<IngredientDetails />
 							</Modal>
 						)}
 					</>
