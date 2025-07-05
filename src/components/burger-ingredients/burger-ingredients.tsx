@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useMemo } from 'react';
 import styles from './burger-ingredients.module.css';
 import { TIngredient } from '@utils/types.ts';
 import { Ingredient } from '../ingredient/ingredient';
@@ -26,22 +26,26 @@ export const BurgerIngredients = ({
 		[]
 	);
 
-	const ingredientBlocks = ingredients.reduce(
-		(acc, ingredient) => {
-			if (ingredient.type === 'bun') {
-				if (!acc['Булки']) acc['Булки'] = [];
-				acc['Булки'].push(ingredient);
-			} else if (ingredient.type === 'main') {
-				if (!acc['Начинки']) acc['Начинки'] = [];
-				acc['Начинки'].push(ingredient);
-			} else if (ingredient.type === 'sauce') {
-				if (!acc['Соусы']) acc['Соусы'] = [];
-				acc['Соусы'].push(ingredient);
-			}
+	const ingredientBlocks = useMemo(
+		() =>
+			ingredients.reduce(
+				(acc, ingredient) => {
+					if (ingredient.type === 'bun') {
+						if (!acc['Булки']) acc['Булки'] = [];
+						acc['Булки'].push(ingredient);
+					} else if (ingredient.type === 'main') {
+						if (!acc['Начинки']) acc['Начинки'] = [];
+						acc['Начинки'].push(ingredient);
+					} else if (ingredient.type === 'sauce') {
+						if (!acc['Соусы']) acc['Соусы'] = [];
+						acc['Соусы'].push(ingredient);
+					}
 
-			return acc;
-		},
-		{} as { [key: string]: TIngredient[] }
+					return acc;
+				},
+				{} as { [key: string]: TIngredient[] }
+			),
+		[ingredients]
 	);
 
 	const onScrollIngredientsHandler = () => {

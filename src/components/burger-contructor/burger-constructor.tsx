@@ -77,19 +77,6 @@ export const BurgerConstructor = ({
 						{ingredients.length ? (
 							<div className={styles.middleIngredientsWrap}>
 								{ingredients.map((el, index) => (
-									// <div
-									// 	key={el.construcrorId}
-									// 	className={styles.middleIngredientWrap}>
-									// 	<DragIcon type='primary' />
-									// 	<ConstructorElement
-									// 		text={el.name}
-									// 		price={el.price}
-									// 		thumbnail={el.image}
-									// 		handleClose={() =>
-									// 			removeIngredientHandler(el.construcrorId)
-									// 		}
-									// 	/>
-									// </div>
 									<BurgerConstructorSortableIngredientWrap
 										key={el.construcrorId}
 										id={el.construcrorId}
@@ -146,7 +133,8 @@ export const BurgerConstructor = ({
 					htmlType='button'
 					type='primary'
 					size='medium'
-					extraClass='ml-10'>
+					extraClass='ml-10'
+					disabled={totalPrice === 0}>
 					Оформить заказ
 				</Button>
 			</div>
