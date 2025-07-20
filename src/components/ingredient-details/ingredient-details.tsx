@@ -2,22 +2,16 @@ import React from 'react';
 import styles from './ingredient-details.module.css';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../services/store';
-
-export type TIngredientDetails = {
-	image: string;
-	name: string;
-	proteins: number;
-	fat: number;
-	carbohydrates: number;
-	calories: number;
-};
+import { useParams } from 'react-router-dom';
+import { getIngredientById } from '../../services/ingredients';
+import { Preloader } from '../preloader/preloader';
 
 export const IngredientDetails = (): React.JSX.Element => {
-	const ingredient = useSelector(
-		(state: RootState) => state.ingredientDetails.ingredientDetails
-	) as TIngredientDetails;
-
-	return (
+	const ingredientId = useParams<'ingredientId'>().ingredientId as string;
+	const ingredient = useSelector((state: RootState) =>
+		getIngredientById(state, ingredientId)
+	)!;
+	return ingredient ? (
 		<div className='pt-3 pb-5'>
 			<p className='mb-8 text text_type_main-large'>Детали ингредиента</p>
 			<div className={`${styles.ingredientInfo__imagewrap} mb-4`}>
@@ -51,5 +45,7 @@ export const IngredientDetails = (): React.JSX.Element => {
 				</div>
 			</div>
 		</div>
+	) : (
+		<Preloader />
 	);
 };

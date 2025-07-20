@@ -5,6 +5,7 @@ import { Ingredient } from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { selectIngredientsCount } from '../../services/burgerConstructor';
 import { useSelector } from 'react-redux';
+import { Link, useLocation } from 'react-router';
 
 type TBurgerIngredientsProps = {
 	ingredients: TIngredient[];
@@ -18,6 +19,7 @@ export const BurgerIngredients = ({
 	const headerRefs = useRef<{ [key: string]: HTMLHeadingElement | null }>({});
 	const ingredientsTabContentRef = useRef<HTMLUListElement | null>(null);
 	const [currentTabName, setCurrentTabName] = useState('Булки');
+	const location = useLocation();
 
 	const setHeaderRef = useCallback(
 		(name: string) => (element: HTMLHeadingElement | null) => {
@@ -115,16 +117,22 @@ export const BurgerIngredients = ({
 						</h2>
 						<div className={styles.ingridientsBlock__list}>
 							{ingredients.map((ingredientEl) => (
-								<Ingredient
+								<Link
+									to={`/ingredient/${ingredientEl._id}`}
+									className={styles.ingredintLink}
 									key={ingredientEl._id}
-									onClickHandler={onIngredientClick}
-									id={ingredientEl._id}
-									name={ingredientEl.name}
-									price={ingredientEl.price}
-									image={ingredientEl.image}
-									count={ingredientsCount[ingredientEl._id] || 0}
-									type={ingredientEl.type}
-								/>
+									state={{ background: location }}>
+									<Ingredient
+										key={ingredientEl._id}
+										onClickHandler={onIngredientClick}
+										id={ingredientEl._id}
+										name={ingredientEl.name}
+										price={ingredientEl.price}
+										image={ingredientEl.image}
+										count={ingredientsCount[ingredientEl._id] || 0}
+										type={ingredientEl.type}
+									/>
+								</Link>
 							))}
 						</div>
 					</li>

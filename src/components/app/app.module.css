@@ -5,24 +5,3 @@
 	color: var(--text-primary-color);
 	background-color: var(--background-alt);
 }
-
-.title {
-	align-self: center;
-	width: 100%;
-
-	@media screen and (width >= 1280px) {
-		width: 1280px;
-	}
-}
-
-.main {
-	display: flex;
-	justify-content: space-between;
-	margin: 0 auto;
-	overflow-y: hidden;
-	column-gap: 40px;
-
-	@media screen and (width >= 1280px) {
-		width: 1280px;
-	}
-}

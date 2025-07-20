@@ -31,3 +31,9 @@
 	justify-content: space-between;
 	gap: 32px 24px;
 }
+
+.ingredintLink {
+	width: 46%;
+	color: var(--text-primary-color);
+	text-decoration: none;
+}

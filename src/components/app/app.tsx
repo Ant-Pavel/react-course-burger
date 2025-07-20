@@ -1,98 +1,82 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import styles from './app.module.css';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { DndProvider } from 'react-dnd';
-import { BurgerIngredients } from '@components/burger-ingredients/burger-ingredients.tsx';
-import { BurgerConstructor } from '@components/burger-contructor/burger-constructor.tsx';
 import { AppHeader } from '@components/app-header/app-header.tsx';
-import { Modal } from '@components/modal/modal.tsx';
-import { OrderDetails } from '@components/order-details/order-details.tsx';
-import { IngredientDetails } from '@components/ingredient-details/ingredient-details.tsx';
-import { Preloader } from '../preloader/preloader';
-import { TIngredient } from '@utils/types.ts';
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchIngredients } from '../../services/ingredients';
-import { sendOrder } from '../../services/order';
-import type { RootState, AppDispatch } from '../../services/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/services/store';
+import { checkIfUserAuthed } from '@/services/auth';
+import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { Home } from '@/pages/Home/Home';
+import { Modal } from '@/components/modal/modal';
+import { IngredientDetails } from '@/components/ingredient-details/ingredient-details';
+import { Login } from '@/pages/Login/Login';
+import { Register } from '@/pages/Register/Register';
+import { ForgotPassword } from '@/pages/ForgotPassword/ForgotPassword';
+import { ResetPassword } from '@/pages/ResetPassword/ResetPassword';
+import { Profile } from '@/pages/Profile/Profile';
+import { NoMatch } from '@/pages/NoMatch/NoMatch';
+import { Ingredient } from '@/pages/Ingredient/Ingredient';
 import {
-	setIngredientDetails,
-	clearIngredientDetails,
-} from '../../services/ingredientDetails';
+	OnlyAuthed,
+	OnlyUnauthed,
+} from '@/components/protected-route/protected-route';
 
 export const App = (): React.JSX.Element => {
-	const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
-	const [isModalIngredientOpen, setIsModalIngredientOpen] = useState(false);
-
+	const location = useLocation();
+	const navigate = useNavigate();
+	const background = location.state && location.state.background;
 	const dispatch: AppDispatch = useDispatch();
-	const { ingredients, loading: isLoadingIngredients } = useSelector(
-		(state: RootState) => state.ingredients
-	);
+	dispatch(checkIfUserAuthed());
 
-	const isSendingOrder = useSelector((state: RootState) => state.order.loading);
-
-	useEffect(() => {
-		dispatch(fetchIngredients());
-	}, [dispatch]);
-
-	const onCreateOrderClick = async () => {
-		await dispatch(sendOrder());
-		setIsModalOrderOpen(true);
-	};
-
-	const onIngredientClick = (id: string) => {
-		const ingredient = ingredients.find(
-			(ingredientF) => ingredientF._id === id
-		) as TIngredient;
-		dispatch(
-			setIngredientDetails({ ...ingredient, image: ingredient.image_large })
-		);
-		setIsModalIngredientOpen(true);
-	};
-
-	const onModalIngredientClose = () => {
-		setIsModalIngredientOpen(false);
-		dispatch(clearIngredientDetails());
+	const handleModalClose = () => {
+		// Возвращаемся к предыдущему пути при закрытии модалки
+		navigate(-1);
 	};
 
 	return (
 		<div className={styles.app}>
 			<>
 				<AppHeader />
-				{isLoadingIngredients || isSendingOrder ? (
-					<Preloader />
-				) : (
-					<>
-						<h1
-							className={`${styles.title} text text_type_main-large mt-10 mb-5 pl-5`}>
-							Соберите бургер
-						</h1>
-						<main className={`${styles.main} pl-5 pr-5`}>
-							<DndProvider backend={HTML5Backend}>
-								<BurgerIngredients
-									ingredients={ingredients}
-									onIngredientClick={onIngredientClick}
-								/>
-								<BurgerConstructor
-									ingredients={ingredients}
-									onCreateOrderClick={onCreateOrderClick}
-								/>
-							</DndProvider>
-						</main>
-						{isModalOrderOpen && (
-							<Modal closeHandler={() => setIsModalOrderOpen(false)}>
-								<OrderDetails />
-							</Modal>
-						)}
-						{isModalIngredientOpen && (
-							<Modal closeHandler={onModalIngredientClose}>
-								<IngredientDetails />
-							</Modal>
-						)}
-					</>
+				<Routes location={background || location}>
+					<Route
+						index
+						path='/'
+						element={<OnlyAuthed component={<Home />} />}></Route>
+					<Route
+						element={<OnlyUnauthed component={<Login />} />}
+						path='/login'></Route>
+					<Route
+						element={<OnlyUnauthed component={<Register />} />}
+						path='/register'></Route>
+					<Route
+						element={<OnlyUnauthed component={<ForgotPassword />} />}
+						path='/forgot-password'></Route>
+					<Route
+						element={<OnlyUnauthed component={<ResetPassword />} />}
+						path='/reset-password'></Route>
+					<Route
+						element={<OnlyAuthed component={<Profile />} />}
+						path='/profile'></Route>
+					<Route
+						element={<OnlyAuthed component={<Ingredient />} />}
+						path='/ingredient/:ingredientId'></Route>
+					<Route
+						element={<OnlyAuthed component={<NoMatch />} />}
+						path='*'></Route>
+				</Routes>
+
+				{background && (
+					<Routes>
+						<Route
+							path='/ingredient/:ingredientId'
+							element={
+								<Modal closeHandler={handleModalClose}>
+									<IngredientDetails />
+								</Modal>
+							}
+						/>
+					</Routes>
 				)}
 			</>
 		</div>
 	);
 };
-
-export default App;
