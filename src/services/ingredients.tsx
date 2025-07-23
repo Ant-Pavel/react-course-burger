@@ -1,7 +1,6 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-// import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { TIngredient } from '../utils/types';
-import { ingredientsUrl } from '@/utils/api';
+import { getIngredients } from '@/utils/ingredientsApi';
 
 interface IngredientsState {
 	ingredients: TIngredient[];
@@ -16,12 +15,11 @@ const initialState: IngredientsState = {
 export const fetchIngredients = createAsyncThunk(
 	'ingredients/fetchIngredients',
 	async (_, { dispatch }) => {
-		const response = await fetch(ingredientsUrl);
-		const data = await response.json();
-		if (response.ok) {
-			dispatch(setIngredients(data.data as TIngredient[]));
+		const response = await getIngredients();
+		if (response.success) {
+			dispatch(setIngredients(response.data as TIngredient[]));
 		}
-		return data;
+		return response;
 	}
 );
 
@@ -42,7 +40,11 @@ const ingredientsSlice = createSlice({
 			.addCase(fetchIngredients.pending, (state) => {
 				state.loading = true;
 			})
-			.addCase(fetchIngredients.fulfilled, (state) => {
+			.addCase(fetchIngredients.fulfilled, (state, action) => {
+				state.loading = false;
+				state.ingredients = action.payload.data;
+			})
+			.addCase(fetchIngredients.rejected, (state) => {
 				state.loading = false;
 			});
 	},
