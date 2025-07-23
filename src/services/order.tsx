@@ -1,18 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import type { PayloadAction } from '@reduxjs/toolkit';
-import { ordersUrl } from '@/utils/api';
 import type { RootState } from './store';
+import { createOrder } from '../utils/orderApi';
 
 interface OrderState {
 	orderCode: string;
 	loading: boolean;
-	error: string | null;
 }
 
 const initialState: OrderState = {
 	orderCode: '',
 	loading: false,
-	error: null,
 };
 
 export const sendOrder = createAsyncThunk(
@@ -34,20 +31,8 @@ export const sendOrder = createAsyncThunk(
 			bun._id,
 		];
 
-		const response = await fetch(ordersUrl, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				ingredients: ingredientsIds,
-			}),
-		});
-		if (!response.ok) {
-			throw new Error('Failed to send order');
-		}
-		const data = await response.json();
-		return String(data.order.number);
+		const response = await createOrder({ ingredients: ingredientsIds });
+		return String(response.order.number);
 	}
 );
 
@@ -59,15 +44,13 @@ const ingredientsSlice = createSlice({
 		builder
 			.addCase(sendOrder.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(sendOrder.fulfilled, (state, action) => {
 				state.loading = false;
 				state.orderCode = action.payload;
 			})
-			.addCase(sendOrder.rejected, (state, action) => {
+			.addCase(sendOrder.rejected, (state) => {
 				state.loading = false;
-				state.error = action.error.message || 'Failed to send order';
 			});
 	},
 });
