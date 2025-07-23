@@ -1,28 +1,34 @@
-import { baseUrl } from './api.ts';
+import { request } from './httpApi.ts';
 
-interface RegisterData {
+type RegisterData = {
 	email: string;
 	password: string;
 	name: string;
-}
+};
 
 type UpdateUserData = RegisterData;
 
-interface LoginData {
+type LoginData = {
 	email: string;
 	password: string;
-}
+};
 
-interface ForgotPasswordData {
+type ForgotPasswordData = {
 	email: string;
-}
+};
 
-interface ResetPasswordData {
+type ResetPasswordData = {
 	password: string;
 	token: string;
-}
+};
 
-interface RegisterSuccessResponse {
+type RefreshTokenResponse = {
+	success: boolean;
+	accessToken: string;
+	refreshToken: string;
+};
+
+type RegisterSuccessResponse = {
 	success: true;
 	user: {
 		email: string;
@@ -30,40 +36,40 @@ interface RegisterSuccessResponse {
 	};
 	accessToken: string;
 	refreshToken: string;
-}
+};
 type LoginSuccessResponse = RegisterSuccessResponse;
 
-interface GetUserSuccessResponse {
+type GetUserSuccessResponse = {
 	success: true;
 	user: {
 		email: string;
 		name: string;
 	};
-}
+};
 
-interface SuccessResponseSimple {
+type SuccessResponseSimple = {
 	success: true;
 	message: string;
-}
+};
 
 type LogoutSuccessResponse = SuccessResponseSimple;
 type ForgotPasswordSuccessResponse = SuccessResponseSimple;
 
-interface UpdateUserSuccessResponse {
+type UpdateUserSuccessResponse = {
 	success: true;
 	user: {
 		email: string;
 		name: string;
 	};
-}
+};
 
-interface FailResponse {
+type FailResponse = {
 	success: false;
 	message: string;
-}
+};
 
-export const refreshToken = async () => {
-	const response = await fetch(`${baseUrl}/api/auth/token`, {
+async function refreshToken() {
+	const refreshData = await request<RefreshTokenResponse>('api/auth/token', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json;charset=utf-8',
@@ -73,48 +79,38 @@ export const refreshToken = async () => {
 		}),
 	});
 
-	const refreshData = await response.json();
 	if (refreshData.success) {
 		localStorage.setItem('refreshToken', refreshData.refreshToken);
 		localStorage.setItem('accessToken', refreshData.accessToken);
 	}
 
 	return refreshData;
-};
+}
 
-export const fetchWithRefresh = async (url: string, options: RequestInit) => {
-	const res = await fetch(url, options);
-	const responseResult = await res.json();
-	console.log('fetchWithRefresh response', responseResult);
-	if (res.ok && responseResult.success) {
-		return responseResult;
-	} else if (responseResult.message === 'jwt expired') {
-		const refreshData = await refreshToken(); //обновляем токен
-		if (refreshData.success) {
-			console.log('refreshData ', refreshData);
-			(options.headers as { Authorization?: string }).Authorization =
-				refreshData.accessToken;
-			const res = await fetch(url, options); //повторяем запрос
-			const responseResult = await res.json();
-			return responseResult;
+export async function fetchWithRefresh(endpoint: string, options: RequestInit) {
+	try {
+		return await request(endpoint, options);
+	} catch (error) {
+		if ((error as { message: string }).message === 'jwt expired') {
+			await refreshToken();
+			return request(endpoint, options);
 		}
-		return refreshData;
+		return Promise.reject(error);
 	}
-	return responseResult;
-};
+}
 
-export async function logIn(
-	loginData: LoginData
-): Promise<LoginSuccessResponse | FailResponse> {
-	const resp = await fetch(`${baseUrl}/api/auth/login`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(loginData),
-	});
+export async function logIn(loginData: LoginData) {
+	const result = await request<LoginSuccessResponse | FailResponse>(
+		'api/auth/login',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(loginData),
+		}
+	);
 
-	const result = await resp.json();
 	if (result.success) {
 		localStorage.setItem('accessToken', result.accessToken);
 		localStorage.setItem('refreshToken', result.refreshToken);
@@ -123,17 +119,19 @@ export async function logIn(
 	return result;
 }
 
-export async function logOut(): Promise<LogoutSuccessResponse | FailResponse> {
+export async function logOut() {
 	const token = localStorage.getItem('refreshToken');
-	const resp = await fetch(`${baseUrl}/api/auth/logout`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify({ token }),
-	});
+	const result = await request<LogoutSuccessResponse | FailResponse>(
+		'api/auth/logout',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({ token }),
+		}
+	);
 
-	const result = await resp.json();
 	if (result.success) {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
@@ -141,18 +139,17 @@ export async function logOut(): Promise<LogoutSuccessResponse | FailResponse> {
 	return result;
 }
 
-export async function register(
-	registerData: RegisterData
-): Promise<RegisterSuccessResponse | FailResponse> {
-	const resp = await fetch(`${baseUrl}/api/auth/register`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(registerData),
-	});
-
-	const result = await resp.json();
+export async function register(registerData: RegisterData) {
+	const result = await request<RegisterSuccessResponse | FailResponse>(
+		'api/auth/register',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(registerData),
+		}
+	);
 
 	if (result.success) {
 		localStorage.setItem('accessToken', result.accessToken);
@@ -162,90 +159,66 @@ export async function register(
 	return result;
 }
 
-export async function resetPassword(
-	resetPassData: ForgotPasswordData
-): Promise<ForgotPasswordSuccessResponse | FailResponse> {
-	const resp = await fetch(`${baseUrl}/api/password-reset`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(resetPassData),
-	});
-	return await resp.json();
+export async function resetPassword(resetPassData: ForgotPasswordData) {
+	return request<ForgotPasswordSuccessResponse | FailResponse>(
+		'api/password-reset',
+		{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(resetPassData),
+		}
+	);
 }
 
 export async function resetPasswordVerification(
 	resetPassData: ResetPasswordData
 ) {
-	const resp = await fetch(`${baseUrl}/api/password-reset/reset`, {
+	return request('api/password-reset/reset', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(resetPassData),
 	});
-	const result = await resp.json();
-	return result;
 }
 
-export async function getUserData(): Promise<
-	GetUserSuccessResponse | FailResponse
-> {
-	try {
-		const accessToken = localStorage.getItem('accessToken') as string;
+export async function getUserData() {
+	const accessToken = localStorage.getItem('accessToken') as string;
 
-		const fetchWithRefreshResult = await fetchWithRefresh(
-			`${baseUrl}/api/auth/user`,
-			{
-				method: 'GET',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: accessToken,
-				},
-			}
-		);
+	const fetchWithRefreshResult = (await fetchWithRefresh('api/auth/user', {
+		method: 'GET',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: accessToken,
+		},
+	})) as GetUserSuccessResponse | FailResponse;
 
-		if (!fetchWithRefreshResult.success) {
-			localStorage.removeItem('accessToken');
-			localStorage.removeItem('refreshToken');
-		}
-
-		return fetchWithRefreshResult;
-	} catch (error) {
+	if (!fetchWithRefreshResult.success) {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
-		throw error;
 	}
+
+	return fetchWithRefreshResult;
 }
 
-export async function updateUserData(
-	userData: UpdateUserData
-): Promise<UpdateUserSuccessResponse | FailResponse> {
-	try {
-		const accessToken = localStorage.getItem('accessToken') as string;
+export async function updateUserData(userData: UpdateUserData) {
+	const accessToken = localStorage.getItem('accessToken') as string;
 
-		const fetchWithRefreshResult = await fetchWithRefresh(
-			`${baseUrl}/api/auth/user`,
-			{
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: accessToken,
-				},
-				body: JSON.stringify(userData),
-			}
-		);
+	const fetchWithRefreshResult = (await fetchWithRefresh('api/auth/user', {
+		method: 'PATCH',
+		headers: {
+			'Content-Type': 'application/json',
+			Authorization: accessToken,
+		},
+		body: JSON.stringify(userData),
+	})) as UpdateUserSuccessResponse | FailResponse;
 
-		if (!fetchWithRefreshResult.success) {
-			localStorage.removeItem('accessToken');
-			localStorage.removeItem('refreshToken');
-		}
-
-		return fetchWithRefreshResult;
-	} catch (error) {
+	if (!fetchWithRefreshResult.success) {
 		localStorage.removeItem('accessToken');
 		localStorage.removeItem('refreshToken');
-		throw error;
 	}
+
+	return fetchWithRefreshResult;
 }
