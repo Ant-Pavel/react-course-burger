@@ -37,10 +37,7 @@ export const App = (): React.JSX.Element => {
 			<>
 				<AppHeader />
 				<Routes location={background || location}>
-					<Route
-						index
-						path='/'
-						element={<OnlyAuthed component={<Home />} />}></Route>
+					<Route index path='/' element={<Home />}></Route>
 					<Route
 						element={<OnlyUnauthed component={<Login />} />}
 						path='/login'></Route>
