@@ -13,25 +13,42 @@ import { fetchIngredients } from '../../services/ingredients';
 import { sendOrder } from '../../services/order';
 import type { RootState, AppDispatch } from '../../services/store';
 import { setIngredientDetails } from '../../services/ingredientDetails';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 
 export const Home = (): React.JSX.Element => {
-	const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
-
 	const dispatch: AppDispatch = useDispatch();
+	const navigate = useNavigate();
+	const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
 	const { ingredients, loading: isLoadingIngredients } = useSelector(
 		(state: RootState) => state.ingredients
 	);
+	const [showLoadIngredientsErr, setShowLoadIngredientsErr] = useState(false);
+	const [showCreateOrderErr, setShowCreateOrderErr] = useState(false);
 
 	const isSendingOrder = useSelector((state: RootState) => state.order.loading);
+	const user = useSelector((state: RootState) => state.auth.user);
 
 	useEffect(() => {
-		dispatch(fetchIngredients());
+		dispatch(fetchIngredients())
+			.unwrap()
+			.catch((err) => {
+				console.log(err);
+				setShowLoadIngredientsErr(true);
+			});
 	}, [dispatch]);
 
 	const onCreateOrderClick = async () => {
-		await dispatch(sendOrder());
-		setIsModalOrderOpen(true);
+		if (!user) {
+			navigate('/login');
+			return;
+		}
+		try {
+			await dispatch(sendOrder()).unwrap();
+			setIsModalOrderOpen(true);
+		} catch (error) {
+			console.error('Error sending order:', error);
+			setShowCreateOrderErr(true);
+		}
 	};
 
 	const onIngredientClick = (id: string) => {
@@ -59,16 +76,31 @@ export const Home = (): React.JSX.Element => {
 								ingredients={ingredients}
 								onIngredientClick={onIngredientClick}
 							/>
-							<BurgerConstructor
-								ingredients={ingredients}
-								onCreateOrderClick={onCreateOrderClick}
-							/>
+							<BurgerConstructor onCreateOrderClick={onCreateOrderClick} />
 						</DndProvider>
 					</main>
 					<Outlet />
 					{isModalOrderOpen && (
 						<Modal closeHandler={() => setIsModalOrderOpen(false)}>
 							<OrderDetails />
+						</Modal>
+					)}
+					{showLoadIngredientsErr && (
+						<Modal closeHandler={() => setShowLoadIngredientsErr(false)}>
+							<div className='p-25 text-center'>
+								<p className='text text_type_main-medium'>
+									Ой. Ошибка загрузки ингредиентов
+								</p>
+							</div>
+						</Modal>
+					)}
+					{showCreateOrderErr && (
+						<Modal closeHandler={() => setShowCreateOrderErr(false)}>
+							<div className='p-25 text-center'>
+								<p className='text text_type_main-medium'>
+									Ой. Ошибка создания заказа
+								</p>
+							</div>
 						</Modal>
 					)}
 				</>
