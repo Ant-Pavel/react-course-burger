@@ -8,6 +8,7 @@ import { logout, getUser, updateUserData } from '@/services/auth';
 import type { User } from '@/services/auth';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
+import { Preloader } from '@components/preloader/preloader';
 
 import type { AppDispatch } from '@/services/store';
 
@@ -24,6 +25,7 @@ export const Profile = (): React.JSX.Element => {
 	const [password, setPassword] = useState(passwordStore);
 	const [showActionBtns, setShowActionsBtns] = useState(false);
 	const [errorMsg, setErrorMsg] = useState('');
+	const [showPreloader, setShowPreloader] = useState(false);
 
 	const logOutClickHandler = async () => {
 		await dispatch(logout());
@@ -58,10 +60,11 @@ export const Profile = (): React.JSX.Element => {
 		setShowActionsBtns(false);
 	};
 
-	const saveChangesBtnHandler = async () => {
+	const formSubmitHandler = async () => {
+		setShowPreloader(true);
 		setErrorMsg('');
 		try {
-			const dispatchRes = await dispatch(
+			await dispatch(
 				updateUserData({
 					name,
 					email,
@@ -72,98 +75,102 @@ export const Profile = (): React.JSX.Element => {
 					password: string;
 				})
 			).unwrap();
-			if (!dispatchRes.success && dispatchRes.message) {
-				setErrorMsg(`Ошибка: ${dispatchRes.message}`);
-			}
 		} catch (error: unknown) {
 			setErrorMsg(
-				`Что-то пошло не так )=. ${Object.hasOwnProperty.call(error, 'message') ? (error as { message: string }).message : 'Неизвестная ошибка'}.`
+				`Ошибка: ${Object.hasOwnProperty.call(error, 'message') ? (error as { message: string }).message : 'Неизвестная ошибка'}.`
 			);
+		} finally {
+			setShowPreloader(false);
 		}
 	};
 
 	return (
-		<div className={styles.profileWrapper}>
-			<div className={styles.profileLeftCol}>
-				<ul className='profileNavList mb-20'>
-					<li className='profileNavItem pt-4 pb-4'>
-						<NavLink
-							to='/profile'
-							className='text text_type_main-medium text_color_primary td-none'>
-							Профиль
-						</NavLink>
-					</li>
-					<li className='profileNavItem pt-4 pb-4'>
-						<NavLink
-							to='/profile/orders'
-							className='text text_type_main-medium text_color_inactive td-none'>
-							История заказов
-						</NavLink>
-					</li>
-					<li className='profileNavItem pt-4 pb-4'>
-						<button
-							onClick={logOutClickHandler}
-							className={`${styles.exitBtn} text text_type_main-medium text_color_inactive td-none`}>
-							Выход
-						</button>
-					</li>
-				</ul>
-				<p className='text text_type_main-small text_color_secondary pr-20'>
-					В этом разделе вы можете изменить свои персональные данные
-				</p>
-			</div>
-			<div>
-				<Input
-					type='text'
-					value={name}
-					placeholder='Имя'
-					extraClass='mb-6 text_color_inactive'
-					name={'name'}
-					onChange={(e) => inputChangeHandler('name', e)}
-				/>
-				<Input
-					type='email'
-					value={email}
-					onChange={(e) => inputChangeHandler('email', e)}
-					placeholder='E-mail'
-					extraClass='mb-6'
-					name={'email'}
-				/>
-				<Input
-					type='password'
-					value={password ?? ''}
-					onChange={(e) => inputChangeHandler('password', e)}
-					placeholder='Пароль'
-					extraClass='mb-6'
-					name={'password'}
-				/>
-				{errorMsg && (
-					<p className='text text_type_main-default text_color_error mb-4'>
-						{errorMsg}
-					</p>
-				)}
-				{showActionBtns && (
-					<div className={styles.profileActionBtns}>
-						<Button
-							onClick={cancelChangesBtnHandler}
-							htmlType='button'
-							type='secondary'
-							size='medium'
-							extraClass='ml-2'>
-							Отмена
-						</Button>
-						<Button
-							disabled={!(name && email && password)}
-							onClick={saveChangesBtnHandler}
-							htmlType='button'
-							type='primary'
-							size='medium'
-							extraClass='ml-2'>
-							Сохранить
-						</Button>
+		<>
+			{showPreloader ? (
+				<Preloader />
+			) : (
+				<div className={styles.profileWrapper}>
+					<div className={styles.profileLeftCol}>
+						<ul className='profileNavList mb-20'>
+							<li className='profileNavItem pt-4 pb-4'>
+								<NavLink
+									to='/profile'
+									className='text text_type_main-medium text_color_primary td-none'>
+									Профиль
+								</NavLink>
+							</li>
+							<li className='profileNavItem pt-4 pb-4'>
+								<NavLink
+									to='/profile/orders'
+									className='text text_type_main-medium text_color_inactive td-none'>
+									История заказов
+								</NavLink>
+							</li>
+							<li className='profileNavItem pt-4 pb-4'>
+								<button
+									onClick={logOutClickHandler}
+									className={`${styles.exitBtn} text text_type_main-medium text_color_inactive td-none`}>
+									Выход
+								</button>
+							</li>
+						</ul>
+						<p className='text text_type_main-small text_color_secondary pr-20'>
+							В этом разделе вы можете изменить свои персональные данные
+						</p>
 					</div>
-				)}
-			</div>
-		</div>
+					<form onSubmit={formSubmitHandler}>
+						<Input
+							type='text'
+							value={name}
+							placeholder='Имя'
+							extraClass='mb-6 text_color_inactive'
+							name={'name'}
+							onChange={(e) => inputChangeHandler('name', e)}
+						/>
+						<Input
+							type='email'
+							value={email}
+							onChange={(e) => inputChangeHandler('email', e)}
+							placeholder='E-mail'
+							extraClass='mb-6'
+							name={'email'}
+						/>
+						<Input
+							type='password'
+							value={password ?? ''}
+							onChange={(e) => inputChangeHandler('password', e)}
+							placeholder='Пароль'
+							extraClass='mb-6'
+							name={'password'}
+						/>
+						{errorMsg && (
+							<p className='text text_type_main-default text_color_error mb-4'>
+								{errorMsg}
+							</p>
+						)}
+						{showActionBtns && (
+							<div className={styles.profileActionBtns}>
+								<Button
+									onClick={cancelChangesBtnHandler}
+									htmlType='button'
+									type='secondary'
+									size='medium'
+									extraClass='ml-2'>
+									Отмена
+								</Button>
+								<Button
+									disabled={!(name && email && password)}
+									htmlType='submit'
+									type='primary'
+									size='medium'
+									extraClass='ml-2'>
+									Сохранить
+								</Button>
+							</div>
+						)}
+					</form>
+				</div>
+			)}
+		</>
 	);
 };
