@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styles from './Login.module.css';
 import {
 	Input,
@@ -17,7 +17,8 @@ export const Login = (): React.JSX.Element => {
 	const [errorMsg, setErrorMsg] = useState('');
 	const [showPreloader, setShowPreloader] = useState(false);
 
-	async function loginClickHandler() {
+	async function formSubmitHandler(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		setErrorMsg('');
 		setShowPreloader(true);
 		try {
@@ -38,31 +39,32 @@ export const Login = (): React.JSX.Element => {
 			) : (
 				<div className={styles.wrap}>
 					<h1 className='text text_type_main-medium mb-6'>Вход</h1>
-					<Input
-						type='email'
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder='E-mail'
-						extraClass='mb-6'
-						name={'email'}
-					/>
-					<Input
-						type='password'
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder='Пароль'
-						extraClass='mb-6'
-						icon={'ShowIcon'}
-						name={'password'}
-					/>
-					<Button
-						onClick={loginClickHandler}
-						htmlType='button'
-						type='primary'
-						disabled={!(email && password)}
-						size='large'>
-						Войти
-					</Button>
+					<form onSubmit={formSubmitHandler} className={styles.form}>
+						<Input
+							type='email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder='E-mail'
+							extraClass='mb-6'
+							name={'email'}
+						/>
+						<Input
+							type='password'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder='Пароль'
+							extraClass='mb-6'
+							icon={'ShowIcon'}
+							name={'password'}
+						/>
+						<Button
+							htmlType='submit'
+							type='primary'
+							disabled={!(email && password)}
+							size='large'>
+							Войти
+						</Button>
+					</form>
 					<div className={styles.bottomTextWrap}>
 						{errorMsg && (
 							<p className='text text_type_main-default text_color_error mt-4'>

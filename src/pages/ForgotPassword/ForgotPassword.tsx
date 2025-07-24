@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styles from './ForgotPassword.module.css';
 import {
 	Input,
@@ -14,7 +14,8 @@ export const ForgotPassword = (): React.JSX.Element => {
 	const [errorMsg, setErrorMsg] = useState('');
 	const [showPreloader, setShowPreloader] = useState(false);
 
-	const resetPasswordBtnClickHandler = async () => {
+	const formSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		setShowPreloader(true);
 		try {
 			await resetPassword({ email });
@@ -37,22 +38,23 @@ export const ForgotPassword = (): React.JSX.Element => {
 					<h1 className='text text_type_main-medium mb-6'>
 						Восстановление пароля
 					</h1>
-					<Input
-						type='email'
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder='Укажите e-mail'
-						extraClass='mb-6'
-						name={'email'}
-					/>
-					<Button
-						disabled={!email}
-						onClick={resetPasswordBtnClickHandler}
-						htmlType='button'
-						type='primary'
-						size='large'>
-						Восстановить
-					</Button>
+					<form onSubmit={formSubmitHandler} className={styles.form}>
+						<Input
+							type='email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder='Укажите e-mail'
+							extraClass='mb-6'
+							name={'email'}
+						/>
+						<Button
+							disabled={!email}
+							htmlType='submit'
+							type='primary'
+							size='large'>
+							Восстановить
+						</Button>
+					</form>
 					<div className={styles.bottomTextWrap}>
 						{errorMsg && (
 							<p className='text text_type_main-default text_color_error mt-4'>

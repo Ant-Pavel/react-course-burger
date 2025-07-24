@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
 import styles from './Profile.module.css';
 import {
 	Input,
@@ -60,7 +60,8 @@ export const Profile = (): React.JSX.Element => {
 		setShowActionsBtns(false);
 	};
 
-	const formSubmitHandler = async () => {
+	const formSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
 		setShowPreloader(true);
 		setErrorMsg('');
 		try {

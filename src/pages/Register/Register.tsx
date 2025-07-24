@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FormEvent, useState } from 'react';
 import styles from './Register.module.css';
 import {
 	Input,
@@ -18,7 +18,8 @@ export const Register = (): React.JSX.Element => {
 	const [password, setPassword] = useState('');
 	const [showPreloader, setShowPreloader] = useState(false);
 
-	async function registerClickHandler() {
+	async function formSubmitHandler(event: FormEvent<HTMLFormElement>) {
+		event.preventDefault();
 		setErrorMsg('');
 		setShowPreloader(true);
 		try {
@@ -39,39 +40,40 @@ export const Register = (): React.JSX.Element => {
 			) : (
 				<div className={styles.wrap}>
 					<h1 className='text text_type_main-medium mb-6'>Регистрация</h1>
-					<Input
-						type='text'
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-						placeholder='Имя'
-						extraClass='mb-6'
-						name={'name'}
-					/>
-					<Input
-						type='email'
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-						placeholder='E-mail'
-						extraClass='mb-6'
-						name={'email'}
-					/>
-					<Input
-						type='password'
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder='Пароль'
-						extraClass='mb-6'
-						icon={'ShowIcon'}
-						name={'password'}
-					/>
-					<Button
-						disabled={!(name && email && password)}
-						htmlType='button'
-						type='primary'
-						size='large'
-						onClick={registerClickHandler}>
-						Зарегистрироваться
-					</Button>
+					<form onSubmit={formSubmitHandler} className={styles.form}>
+						<Input
+							type='text'
+							value={name}
+							onChange={(e) => setName(e.target.value)}
+							placeholder='Имя'
+							extraClass='mb-6'
+							name={'name'}
+						/>
+						<Input
+							type='email'
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+							placeholder='E-mail'
+							extraClass='mb-6'
+							name={'email'}
+						/>
+						<Input
+							type='password'
+							value={password}
+							onChange={(e) => setPassword(e.target.value)}
+							placeholder='Пароль'
+							extraClass='mb-6'
+							icon={'ShowIcon'}
+							name={'password'}
+						/>
+						<Button
+							disabled={!(name && email && password)}
+							htmlType='submit'
+							type='primary'
+							size='large'>
+							Зарегистрироваться
+						</Button>
+					</form>
 					<div className={styles.bottomTextWrap}>
 						{errorMsg && (
 							<p className='text text_type_main-default text_color_error mt-4'>
