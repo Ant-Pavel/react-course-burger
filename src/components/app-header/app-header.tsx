@@ -7,9 +7,9 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, matchRoutes, useLocation } from 'react-router-dom';
 
-export const AppHeader = () => {
+export const AppHeader = (): React.JSX.Element => {
 	const location = useLocation();
-	const isActiveLink = (path: string) => {
+	const isActiveLink = (path: string): boolean => {
 		const routes = matchRoutes(
 			[{ path, caseSensitive: false }],
 			location.pathname

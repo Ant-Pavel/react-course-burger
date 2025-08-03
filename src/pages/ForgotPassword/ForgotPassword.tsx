@@ -10,9 +10,9 @@ import { Preloader } from '@components/preloader/preloader';
 
 export const ForgotPassword = (): React.JSX.Element => {
 	const navigate = useNavigate();
-	const [email, setEmail] = useState('');
-	const [errorMsg, setErrorMsg] = useState('');
-	const [showPreloader, setShowPreloader] = useState(false);
+	const [email, setEmail] = useState<string>('');
+	const [errorMsg, setErrorMsg] = useState<string>('');
+	const [showPreloader, setShowPreloader] = useState<boolean>(false);
 
 	const formSubmitHandler = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();

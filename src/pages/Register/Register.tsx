@@ -92,9 +92,3 @@ export const Register = (): React.JSX.Element => {
 		</>
 	);
 };
-
-/**
-Pavel
-artem.pavel2016@yandex.ru
-Cheburashka
-*/

@@ -23,7 +23,8 @@ import {
 export const App = (): React.JSX.Element => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const background = location.state && location.state.background;
+	const background: null | Location =
+		location.state && location.state.background;
 	const dispatch: AppDispatch = useDispatch();
 	dispatch(checkIfUserAuthed());
 

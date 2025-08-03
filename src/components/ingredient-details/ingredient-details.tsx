@@ -7,10 +7,12 @@ import { getIngredientById } from '../../services/ingredients';
 import { Preloader } from '../preloader/preloader';
 
 export const IngredientDetails = (): React.JSX.Element => {
-	const ingredientId = useParams<'ingredientId'>().ingredientId as string;
-	const ingredient = useSelector((state: RootState) =>
-		getIngredientById(state, ingredientId)
-	)!;
+	const ingredientId: string | undefined =
+		useParams<'ingredientId'>().ingredientId;
+	const ingredient = useSelector((state: RootState) => {
+		if (!ingredientId) return null;
+		return getIngredientById(state, ingredientId);
+	});
 	return ingredient ? (
 		<div className='pt-3 pb-5'>
 			<p className='mb-8 text text_type_main-large'>Детали ингредиента</p>

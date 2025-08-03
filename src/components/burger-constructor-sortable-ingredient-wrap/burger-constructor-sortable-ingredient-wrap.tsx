@@ -17,15 +17,19 @@ interface IdraggedItem {
 	index: number;
 }
 
+interface IDragCollectedProps {
+	isDragging: boolean;
+}
+
 export const BurgerConstructorSortableIngredientWrap = ({
 	id,
 	index,
 	children,
 }: IBurgerConstructorSortableIngredientWrapProps): React.JSX.Element => {
-	const ref = useRef(null);
+	const ref = useRef<HTMLDivElement | null>(null);
 	const dispatch: AppDispatch = useDispatch();
 
-	const [, dropRef] = useDrop({
+	const [, dropRef] = useDrop<IdraggedItem, unknown, unknown>({
 		accept: 'burgerConstructorSortableItem',
 		hover(item: IdraggedItem, monitor) {
 			if (!ref.current) {
@@ -37,10 +41,10 @@ export const BurgerConstructorSortableIngredientWrap = ({
 			if (dragIndex === hoverIndex) {
 				return;
 			}
+
+			if (!ref.current) return;
 			// Determine rectangle on screen
-			const hoverBoundingRect = (
-				ref.current as HTMLDivElement
-			).getBoundingClientRect();
+			const hoverBoundingRect = ref.current.getBoundingClientRect();
 			// Get vertical middle
 			const hoverMiddleY =
 				(hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -70,8 +74,12 @@ export const BurgerConstructorSortableIngredientWrap = ({
 		},
 	});
 
-	const [{ isDragging }, dragRef] = useDrag({
-		item: { id, index } as IdraggedItem,
+	const [{ isDragging }, dragRef] = useDrag<
+		IdraggedItem,
+		unknown,
+		IDragCollectedProps
+	>({
+		item: { id, index },
 		type: 'burgerConstructorSortableItem',
 		collect: (monitor) => ({
 			isDragging: monitor.isDragging(),

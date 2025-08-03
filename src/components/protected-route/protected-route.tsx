@@ -36,6 +36,6 @@ export const Protected = ({
 export const OnlyAuthed = Protected;
 export const OnlyUnauthed = ({
 	component,
-}: Pick<IProtectedProps, 'component'>) => (
+}: Pick<IProtectedProps, 'component'>): React.JSX.Element => (
 	<Protected onlyAuthedAccess={false} component={component} />
 );

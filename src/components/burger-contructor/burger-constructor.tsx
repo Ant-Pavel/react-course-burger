@@ -16,6 +16,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { BurgerConstructorEmptyZone } from '../burger-constructor-empty-zone/burger-constructor-empty-zone.tsx';
 import { BurgerConstructorSortableIngredientWrap } from '../burger-constructor-sortable-ingredient-wrap/burger-constructor-sortable-ingredient-wrap.tsx';
+import type { TDraggingIngredientItem } from '@/utils/types.ts';
 
 type TBurgerConstructorProps = {
 	onCreateOrderClick: () => void;
@@ -29,9 +30,13 @@ export const BurgerConstructor = ({
 		(state: RootState) => state.burgerConstructor
 	);
 
-	const [{ draggedItem }, dropRef] = useDrop(() => ({
+	const [{ draggedItem }, dropRef] = useDrop<
+		TDraggingIngredientItem,
+		unknown,
+		{ draggedItem: TDraggingIngredientItem | undefined }
+	>(() => ({
 		accept: 'ingredient',
-		drop: (item: { id: string; type: string }) => {
+		drop: (item: TDraggingIngredientItem) => {
 			dispatch(addIngredientById(item.id));
 		},
 		collect: (monitor) => ({
@@ -39,7 +44,7 @@ export const BurgerConstructor = ({
 		}),
 	}));
 
-	const removeIngredientHandler = (constructorId: string) => {
+	const removeIngredientHandler = (constructorId: string): void => {
 		dispatch(removeIngredient(constructorId));
 	};
 
