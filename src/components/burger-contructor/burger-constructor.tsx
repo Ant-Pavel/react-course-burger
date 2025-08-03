@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './burger-constructor.module.css';
-import { TIngredient } from '@utils/types.ts';
 import {
 	removeIngredient,
 	getTotalPriceSelector,
@@ -19,12 +18,10 @@ import { BurgerConstructorEmptyZone } from '../burger-constructor-empty-zone/bur
 import { BurgerConstructorSortableIngredientWrap } from '../burger-constructor-sortable-ingredient-wrap/burger-constructor-sortable-ingredient-wrap.tsx';
 
 type TBurgerConstructorProps = {
-	ingredients: TIngredient[];
 	onCreateOrderClick: () => void;
 };
 
 export const BurgerConstructor = ({
-	// ingredients,
 	onCreateOrderClick,
 }: TBurgerConstructorProps): React.JSX.Element => {
 	const dispatch: AppDispatch = useDispatch();
@@ -41,10 +38,6 @@ export const BurgerConstructor = ({
 			draggedItem: monitor.getItem(),
 		}),
 	}));
-
-	// const addIngredientHandler = (ingredient: TIngredient) => {
-	// 	dispatch(addIngredient(ing));
-	// };
 
 	const removeIngredientHandler = (constructorId: string) => {
 		dispatch(removeIngredient(constructorId));

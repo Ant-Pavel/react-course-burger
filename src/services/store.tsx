@@ -4,6 +4,7 @@ import ingredientsReducer from './ingredients';
 import burgerConstructorReducer from './burgerConstructor';
 import orderReducer from './order';
 import ingredientDetailsReducer from './ingredientDetails';
+import authReducer from './auth';
 
 export const store = configureStore({
 	reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
 		burgerConstructor: burgerConstructorReducer,
 		order: orderReducer,
 		ingredientDetails: ingredientDetailsReducer,
+		auth: authReducer,
 	},
 	devTools: process.env.NODE_ENV !== 'production',
 });

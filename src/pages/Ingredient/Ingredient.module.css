@@ -23,3 +23,10 @@
 	align-items: center;
 	gap: 6px;
 }
+
+.ingredientWrap {
+	width: 640px;
+	margin: 0 auto;
+	margin-top: 210px;
+	text-align: center;
+}

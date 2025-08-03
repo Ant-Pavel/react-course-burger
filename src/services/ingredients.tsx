@@ -1,51 +1,55 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import type { TIngredient } from '../utils/types';
-import { ingredientsUrl } from '@/utils/api';
+import { getIngredients } from '@/utils/ingredientsApi';
 
 interface IngredientsState {
 	ingredients: TIngredient[];
 	loading: boolean;
-	error: string | null;
 }
 
 const initialState: IngredientsState = {
 	ingredients: [],
 	loading: false,
-	error: null,
 };
 
 export const fetchIngredients = createAsyncThunk(
 	'ingredients/fetchIngredients',
-	async () => {
-		const response = await fetch(ingredientsUrl);
-		if (!response.ok) {
-			throw new Error('Failed to fetch ingredients');
+	async (_, { dispatch }) => {
+		const response = await getIngredients();
+		if (response.success) {
+			dispatch(setIngredients(response.data as TIngredient[]));
 		}
-		const data = await response.json();
-		return data.data as TIngredient[];
+		return response;
 	}
 );
 
 const ingredientsSlice = createSlice({
 	name: 'ingredients',
 	initialState,
-	reducers: {},
+	reducers: {
+		setIngredients: (state, action: PayloadAction<TIngredient[]>) => {
+			state.ingredients = action.payload;
+		},
+	},
+	selectors: {
+		getIngredientById: (state, id: string) =>
+			state.ingredients.find((ingredient) => ingredient._id === id),
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchIngredients.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(fetchIngredients.fulfilled, (state, action) => {
 				state.loading = false;
-				state.ingredients = action.payload;
+				state.ingredients = action.payload.data;
 			})
-			.addCase(fetchIngredients.rejected, (state, action) => {
+			.addCase(fetchIngredients.rejected, (state) => {
 				state.loading = false;
-				state.error = action.error.message || 'Failed to fetch ingredients';
 			});
 	},
 });
 
 export default ingredientsSlice.reducer;
+const { setIngredients } = ingredientsSlice.actions;
+export const { getIngredientById } = ingredientsSlice.selectors;
