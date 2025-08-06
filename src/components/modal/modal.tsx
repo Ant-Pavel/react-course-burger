@@ -18,7 +18,7 @@ export const Modal = ({
 	const handleOverlayKeydown = (event: React.KeyboardEvent<HTMLDivElement>) => {
 		if (event.code === 'Escape') closeHandler();
 	};
-	const dialogContentRef = useRef<HTMLDivElement>(null);
+	const dialogContentRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
 		if (dialogContentRef && dialogContentRef.current) {

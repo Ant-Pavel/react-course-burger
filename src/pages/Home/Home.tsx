@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import styles from './Home.module.css';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
@@ -11,22 +11,21 @@ import { Preloader } from '@components/preloader/preloader';
 import { TIngredient } from '@utils/types.ts';
 import { fetchIngredients } from '../../services/ingredients';
 import { sendOrder } from '../../services/order';
-import type { RootState, AppDispatch } from '../../services/store';
 import { setIngredientDetails } from '../../services/ingredientDetails';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 export const Home = (): React.JSX.Element => {
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const [isModalOrderOpen, setIsModalOrderOpen] = useState(false);
-	const { ingredients, loading: isLoadingIngredients } = useSelector(
-		(state: RootState) => state.ingredients
+	const { ingredients, loading: isLoadingIngredients } = useAppSelector(
+		(state) => state.ingredients
 	);
 	const [showLoadIngredientsErr, setShowLoadIngredientsErr] = useState(false);
 	const [showCreateOrderErr, setShowCreateOrderErr] = useState(false);
 
-	const isSendingOrder = useSelector((state: RootState) => state.order.loading);
-	const user = useSelector((state: RootState) => state.auth.user);
+	const isSendingOrder = useAppSelector((state) => state.order.loading);
+	const user = useAppSelector((state) => state.auth.user);
 
 	useEffect(() => {
 		dispatch(fetchIngredients())

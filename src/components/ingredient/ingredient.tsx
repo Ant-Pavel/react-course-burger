@@ -11,6 +11,7 @@ interface TBurgerIngredientProps
 	count: number;
 	onClickHandler: (id: string) => void;
 }
+import type { TDraggingIngredientItem } from '@/utils/types.ts';
 
 export const Ingredient = ({
 	id,
@@ -21,7 +22,7 @@ export const Ingredient = ({
 	type,
 	onClickHandler,
 }: TBurgerIngredientProps): React.JSX.Element => {
-	const [, dragRef] = useDrag(() => ({
+	const [, dragRef] = useDrag<TDraggingIngredientItem>(() => ({
 		type: 'ingredient',
 		item: { id, type },
 	}));
