@@ -1,19 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Ingredient.module.css';
-import { useSelector, useDispatch } from 'react-redux';
-import type { RootState, AppDispatch } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { fetchIngredients } from '@/services/ingredients';
 import { Preloader } from '@/components/preloader/preloader';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { TIngredient } from '@/utils/types';
 
 export const Ingredient = (): React.JSX.Element => {
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { ingredientId } = useParams<'ingredientId'>();
 	const [ingredient, setIngredient] = useState<null | TIngredient>(null);
-	const { loading: isLoadingIngredients } = useSelector(
-		(state: RootState) => state.ingredients
+	const { loading: isLoadingIngredients } = useAppSelector(
+		(state) => state.ingredients
 	);
 
 	useEffect(() => {

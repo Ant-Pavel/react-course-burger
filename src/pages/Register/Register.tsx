@@ -5,13 +5,12 @@ import {
 	Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { register } from '@/services/auth';
-import { useDispatch } from 'react-redux';
-import type { AppDispatch } from '@/services/store';
+import { useAppDispatch } from '@/services/store';
 import { NavLink } from 'react-router-dom';
 import { Preloader } from '@components/preloader/preloader';
 
 export const Register = (): React.JSX.Element => {
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const [errorMsg, setErrorMsg] = useState('');
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');

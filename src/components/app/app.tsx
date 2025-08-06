@@ -1,8 +1,7 @@
 import React from 'react';
 import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.tsx';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/services/store';
+import { useAppDispatch } from '@/services/store';
 import { checkIfUserAuthed } from '@/services/auth';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from '@/pages/Home/Home';
@@ -25,7 +24,7 @@ export const App = (): React.JSX.Element => {
 	const navigate = useNavigate();
 	const background: null | Location =
 		location.state && location.state.background;
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	dispatch(checkIfUserAuthed());
 
 	const handleModalClose = () => {

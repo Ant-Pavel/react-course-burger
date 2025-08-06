@@ -6,19 +6,17 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { logout, getUser, updateUserData } from '@/services/auth';
 import type { User } from '@/services/auth';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import { NavLink } from 'react-router-dom';
 import { Preloader } from '@components/preloader/preloader';
 
-import type { AppDispatch } from '@/services/store';
-
 export const Profile = (): React.JSX.Element => {
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch = useAppDispatch();
 	const {
 		name: nameStore,
 		email: emailStore,
 		password: passwordStore,
-	} = useSelector(getUser) as User;
+	} = useAppSelector(getUser) as User;
 
 	const [name, setName] = useState(nameStore);
 	const [email, setEmail] = useState(emailStore);

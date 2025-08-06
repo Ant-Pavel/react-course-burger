@@ -5,9 +5,8 @@ import {
 	getTotalPriceSelector,
 	addIngredientById,
 } from '../../services/burgerConstructor';
-import type { RootState, AppDispatch } from '../../services/store';
 import { useDrop } from 'react-dnd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useAppDispatch, useAppSelector } from '@/services/store';
 import {
 	ConstructorElement,
 	Button,
@@ -25,9 +24,9 @@ type TBurgerConstructorProps = {
 export const BurgerConstructor = ({
 	onCreateOrderClick,
 }: TBurgerConstructorProps): React.JSX.Element => {
-	const dispatch: AppDispatch = useDispatch();
-	const { bun, ingredients } = useSelector(
-		(state: RootState) => state.burgerConstructor
+	const dispatch = useAppDispatch();
+	const { bun, ingredients } = useAppSelector(
+		(state) => state.burgerConstructor
 	);
 
 	const [{ draggedItem }, dropRef] = useDrop<
@@ -48,7 +47,7 @@ export const BurgerConstructor = ({
 		dispatch(removeIngredient(constructorId));
 	};
 
-	const totalPrice = useSelector(getTotalPriceSelector);
+	const totalPrice = useAppSelector(getTotalPriceSelector);
 
 	return (
 		<section className={`${styles.burger_constructor} pb-10`}>

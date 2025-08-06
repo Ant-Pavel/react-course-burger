@@ -1,11 +1,10 @@
 import React from 'react';
 import styles from './order-details.module.css';
 import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
-import type { RootState } from '../../services/store';
+import { useAppSelector } from '@/services/store';
 
 export const OrderDetails = (): React.JSX.Element => {
-	const orderCode = useSelector((state: RootState) => state.order.orderCode);
+	const orderCode = useAppSelector((state) => state.order.orderCode);
 	return (
 		<div className={`${styles.order} pt-20`}>
 			<p className={`${styles.order__id}  mb-8 text text_type_digits-large`}>

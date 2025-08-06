@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 // import styles from './burger-constructor-sortable-ingredient-wrap.module.css';
 import { useDrag, useDrop } from 'react-dnd';
 import type { XYCoord } from 'react-dnd';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '@/services/store';
 import type { AppDispatch } from '../../services/store';
 import { moveIngredient } from '../../services/burgerConstructor';
 
@@ -27,7 +27,7 @@ export const BurgerConstructorSortableIngredientWrap = ({
 	children,
 }: IBurgerConstructorSortableIngredientWrapProps): React.JSX.Element => {
 	const ref = useRef<HTMLDivElement | null>(null);
-	const dispatch: AppDispatch = useDispatch();
+	const dispatch: AppDispatch = useAppDispatch();
 
 	const [, dropRef] = useDrop<IdraggedItem, unknown, unknown>({
 		accept: 'burgerConstructorSortableItem',

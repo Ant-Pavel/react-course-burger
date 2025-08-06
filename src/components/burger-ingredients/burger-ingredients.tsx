@@ -4,7 +4,7 @@ import { TIngredient } from '@utils/types.ts';
 import { Ingredient } from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { selectIngredientsCount } from '../../services/burgerConstructor';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '@/services/store';
 import { Link, useLocation } from 'react-router';
 
 type TBurgerIngredientsProps = {
@@ -72,7 +72,7 @@ export const BurgerIngredients = ({
 		});
 	};
 
-	const ingredientsCount = useSelector(selectIngredientsCount);
+	const ingredientsCount = useAppSelector(selectIngredientsCount);
 
 	return (
 		<section className={styles.burger_ingredients}>
