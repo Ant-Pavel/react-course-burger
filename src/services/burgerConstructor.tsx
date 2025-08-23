@@ -65,6 +65,7 @@ const burgerConstructorSlice = createSlice({
 			ingredients.splice(toIndex, 0, ingredients.splice(fromIndex, 1)[0]);
 			state.ingredients = ingredients;
 		},
+		resetConstructor: () => ({ ...initialState }),
 	},
 });
 
@@ -111,5 +112,6 @@ export const {
 	addIngredient,
 	removeIngredient,
 	moveIngredient,
+	resetConstructor,
 } = burgerConstructorSlice.actions;
 export default burgerConstructorSlice;

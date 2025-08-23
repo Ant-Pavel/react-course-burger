@@ -20,7 +20,6 @@ export const AppHeader = (): React.JSX.Element => {
 		<header className={styles.header}>
 			<nav className={`${styles.menu} p-4`}>
 				<div className={styles.menu_part_left}>
-					{/*пока тут должны быть ссылки, а не например кнопки или абзацы*/}
 					<NavLink
 						to='/'
 						className={`${styles.link} ${isActiveLink('/') && styles.link_active}`}>
@@ -32,9 +31,11 @@ export const AppHeader = (): React.JSX.Element => {
 						<p className='text text_type_main-default ml-2'>Лента заказов</p>
 					</NavLink>
 				</div>
-				<div className={styles.logo}>
-					<Logo />
-				</div>
+				<NavLink to='/'>
+					<div className={styles.logo}>
+						<Logo />
+					</div>
+				</NavLink>
 				<NavLink
 					to='/profile'
 					className={`${styles.link} ${styles.link_position_last} ${isActiveLink('/profile') && styles.link_active}`}>

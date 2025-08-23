@@ -6,7 +6,7 @@ import {
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { wsOrdersAllUrl } from '@/utils/httpApi';
-import { getIngredientsDict, fetchIngredients } from '@/services/ingredients';
+import { getIngredientsDict } from '@/services/ingredients';
 import { Preloader } from '@components/preloader/preloader';
 import { FeedOrdersList } from '@components/feed-orders-list/feed-orders-list';
 import { selectPendingOrders, selectCreatedOrders } from '@/services/ordersAll';
@@ -26,14 +26,6 @@ export const FeedPage = (): React.JSX.Element => {
 	const ingredientsDict = useAppSelector(getIngredientsDict);
 
 	useEffect(() => {
-		if (!ingredients.length) {
-			dispatch(fetchIngredients())
-				.unwrap()
-				.catch((err) => {
-					console.log(err);
-					// setShowLoadIngredientsErr(true);
-				});
-		}
 		dispatch(wsConnect(wsOrdersAllUrl));
 
 		return () => {

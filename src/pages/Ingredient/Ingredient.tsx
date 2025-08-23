@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Ingredient.module.css';
 import { useAppDispatch, useAppSelector } from '@/services/store';
-import { fetchIngredients } from '@/services/ingredients';
 import { Preloader } from '@/components/preloader/preloader';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IngredientDetails } from '@/components/ingredient-details/ingredient-details';
@@ -12,15 +11,12 @@ export const Ingredient = (): React.JSX.Element => {
 	const navigate = useNavigate();
 	const { ingredientId } = useParams<'ingredientId'>();
 	const [ingredient, setIngredient] = useState<null | TIngredient>(null);
-	const { loading: isLoadingIngredients } = useAppSelector(
+	const { ingredients, loading: isLoadingIngredients } = useAppSelector(
 		(state) => state.ingredients
 	);
 
 	useEffect(() => {
 		const loadIngredients = async () => {
-			const fetchIngredientsRes = await dispatch(fetchIngredients()).unwrap();
-			if (!fetchIngredientsRes.success) return;
-			const ingredients = fetchIngredientsRes.data;
 			const ingredient = ingredients.find(
 				(ingr: TIngredient) => ingr._id === ingredientId
 			);
@@ -31,7 +27,7 @@ export const Ingredient = (): React.JSX.Element => {
 			}
 		};
 		loadIngredients();
-	}, [dispatch, navigate, ingredientId]);
+	}, [dispatch, navigate, ingredientId, ingredients]);
 
 	if (isLoadingIngredients || !ingredient) {
 		return <Preloader />;

@@ -9,7 +9,7 @@ import styles from './order-info.module.css';
 import { useParams } from 'react-router-dom';
 import { loadOrder } from '@/services/order';
 import { orderStatusesTranslation } from '@/utils/types';
-import { getIngredientsDict, fetchIngredients } from '@/services/ingredients';
+import { getIngredientsDict } from '@/services/ingredients';
 
 type IOrderInfoProps = {
 	insideModal?: boolean;
@@ -40,14 +40,6 @@ export const OrderInfo = ({ insideModal }: IOrderInfoProps) => {
 	useEffect(() => {
 		if (!order) {
 			dispatch(loadOrder(Number(orderNumberRouteParam)));
-		}
-		if (!ingredients.length) {
-			dispatch(fetchIngredients())
-				.unwrap()
-				.catch((err) => {
-					console.log(err);
-					// setShowLoadIngredientsErr(true);
-				});
 		}
 	}, [dispatch, order, orderNumberRouteParam, ingredients]);
 

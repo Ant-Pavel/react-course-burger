@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.tsx';
 import { useAppDispatch } from '@/services/store';
@@ -22,6 +22,7 @@ import {
 	OnlyAuthed,
 	OnlyUnauthed,
 } from '@/components/protected-route/protected-route';
+import { fetchIngredients } from '@/services/ingredients';
 
 export const App = (): React.JSX.Element => {
 	const location = useLocation();
@@ -31,6 +32,9 @@ export const App = (): React.JSX.Element => {
 		location.state && location.state.background;
 	const dispatch = useAppDispatch();
 	dispatch(checkIfUserAuthed());
+	useEffect(() => {
+		dispatch(fetchIngredients());
+	}, [dispatch]);
 
 	const handleModalClose = () => {
 		// Возвращаемся к предыдущему пути при закрытии модалки
@@ -45,6 +49,9 @@ export const App = (): React.JSX.Element => {
 					<Route index path='/' element={<Home />}></Route>
 					<Route element={<FeedPage />} path='/feed'></Route>
 					<Route element={<OrderInfo />} path='/feed/:number'></Route>
+					<Route
+						element={<Ingredient />}
+						path='/ingredient/:ingredientId'></Route>
 					<Route
 						element={<OnlyUnauthed component={<Login />} />}
 						path='/login'></Route>
@@ -64,8 +71,8 @@ export const App = (): React.JSX.Element => {
 						<Route element={<ProfileFeedTabContent />} path='/profile/orders' />
 					</Route>
 					<Route
-						element={<OnlyAuthed component={<Ingredient />} />}
-						path='/ingredient/:ingredientId'></Route>
+						element={<OnlyAuthed component={<OrderInfo />} />}
+						path='/profile/orders/:number'></Route>
 					<Route
 						element={<OnlyAuthed component={<NoMatch />} />}
 						path='*'></Route>

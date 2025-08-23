@@ -6,7 +6,7 @@ import {
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { wsOrdersUserUrl } from '@/utils/httpApi';
-import { getIngredientsDict, fetchIngredients } from '@/services/ingredients';
+import { getIngredientsDict } from '@/services/ingredients';
 import { Preloader } from '@components/preloader/preloader';
 import { FeedOrdersList } from '@components/feed-orders-list/feed-orders-list';
 
@@ -22,14 +22,6 @@ export const ProfileFeedTabContent = (): React.JSX.Element => {
 	const ingredientsDict = useAppSelector(getIngredientsDict);
 
 	useEffect(() => {
-		if (!ingredients.length) {
-			dispatch(fetchIngredients())
-				.unwrap()
-				.catch((err) => {
-					console.log(err);
-					// setShowLoadIngredientsErr(true);
-				});
-		}
 		dispatch(
 			wsConnect(
 				`${wsOrdersUserUrl}?token=${(localStorage.getItem('accessToken') as string).split('Bearer ')[1]}`
