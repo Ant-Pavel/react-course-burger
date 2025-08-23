@@ -112,4 +112,4 @@ export const {
 	removeIngredient,
 	moveIngredient,
 } = burgerConstructorSlice.actions;
-export default burgerConstructorSlice.reducer;
+export default burgerConstructorSlice;

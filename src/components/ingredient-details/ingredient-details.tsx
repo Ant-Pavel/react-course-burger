@@ -1,19 +1,16 @@
 import React from 'react';
 import styles from './ingredient-details.module.css';
-import { useAppSelector } from '@/services/store';
-import { useParams } from 'react-router-dom';
-import { getIngredientById } from '../../services/ingredients';
-import { Preloader } from '../preloader/preloader';
+import type { TIngredient } from '@/utils/types';
 
-export const IngredientDetails = (): React.JSX.Element => {
-	const ingredientId: string | undefined =
-		useParams<'ingredientId'>().ingredientId;
-	const ingredient = useAppSelector((state) => {
-		if (!ingredientId) return null;
-		return getIngredientById(state, ingredientId);
-	});
-	return ingredient ? (
-		<div className='pt-3 pb-5'>
+interface IIngredientDetailsProps {
+	ingredient: TIngredient;
+}
+
+export const IngredientDetails = ({
+	ingredient,
+}: IIngredientDetailsProps): React.JSX.Element => {
+	return (
+		<>
 			<p className='mb-8 text text_type_main-large'>Детали ингредиента</p>
 			<div className={`${styles.ingredientInfo__imagewrap} mb-4`}>
 				<img
@@ -45,8 +42,6 @@ export const IngredientDetails = (): React.JSX.Element => {
 					<span>{ingredient.carbohydrates}</span>
 				</div>
 			</div>
-		</div>
-	) : (
-		<Preloader />
+		</>
 	);
 };

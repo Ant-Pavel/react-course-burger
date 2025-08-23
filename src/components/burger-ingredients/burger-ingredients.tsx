@@ -5,7 +5,7 @@ import { Ingredient } from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { selectIngredientsCount } from '../../services/burgerConstructor';
 import { useAppSelector } from '@/services/store';
-import { Link, useLocation } from 'react-router';
+import { NavLink, useLocation } from 'react-router';
 
 type TBurgerIngredientsProps = {
 	ingredients: TIngredient[];
@@ -117,7 +117,7 @@ export const BurgerIngredients = ({
 						</h2>
 						<div className={styles.ingridientsBlock__list}>
 							{ingredients.map((ingredientEl) => (
-								<Link
+								<NavLink
 									to={`/ingredient/${ingredientEl._id}`}
 									className={styles.ingredintLink}
 									key={ingredientEl._id}
@@ -132,7 +132,7 @@ export const BurgerIngredients = ({
 										count={ingredientsCount[ingredientEl._id] || 0}
 										type={ingredientEl.type}
 									/>
-								</Link>
+								</NavLink>
 							))}
 						</div>
 					</li>

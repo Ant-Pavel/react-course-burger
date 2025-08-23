@@ -1,4 +1,5 @@
-import { request } from './httpApi.ts';
+import { request, fetchWithRefresh, removeAuthTokens } from './httpApi.ts';
+import type { FailResponse } from './httpApi.ts';
 
 type RegisterData = {
 	email: string;
@@ -20,12 +21,6 @@ type ForgotPasswordData = {
 type ResetPasswordData = {
 	password: string;
 	token: string;
-};
-
-type RefreshTokenResponse = {
-	success: boolean;
-	accessToken: string;
-	refreshToken: string;
 };
 
 type RegisterSuccessResponse = {
@@ -63,42 +58,6 @@ type UpdateUserSuccessResponse = {
 	};
 };
 
-type FailResponse = {
-	success: false;
-	message: string;
-};
-
-async function refreshToken() {
-	const refreshData = await request<RefreshTokenResponse>('api/auth/token', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json;charset=utf-8',
-		},
-		body: JSON.stringify({
-			token: localStorage.getItem('refreshToken'),
-		}),
-	});
-
-	if (refreshData.success) {
-		localStorage.setItem('refreshToken', refreshData.refreshToken);
-		localStorage.setItem('accessToken', refreshData.accessToken);
-	}
-
-	return refreshData;
-}
-
-export async function fetchWithRefresh(endpoint: string, options: RequestInit) {
-	try {
-		return await request(endpoint, options);
-	} catch (error) {
-		if ((error as { message: string }).message === 'jwt expired') {
-			await refreshToken();
-			return request(endpoint, options);
-		}
-		return Promise.reject(error);
-	}
-}
-
 export async function logIn(loginData: LoginData) {
 	const result = await request<LoginSuccessResponse | FailResponse>(
 		'api/auth/login',
@@ -133,9 +92,9 @@ export async function logOut() {
 	);
 
 	if (result.success) {
-		localStorage.removeItem('accessToken');
-		localStorage.removeItem('refreshToken');
+		removeAuthTokens();
 	}
+
 	return result;
 }
 
@@ -196,8 +155,7 @@ export async function getUserData() {
 	})) as GetUserSuccessResponse | FailResponse;
 
 	if (!fetchWithRefreshResult.success) {
-		localStorage.removeItem('accessToken');
-		localStorage.removeItem('refreshToken');
+		removeAuthTokens();
 	}
 
 	return fetchWithRefreshResult;
@@ -216,8 +174,7 @@ export async function updateUserData(userData: UpdateUserData) {
 	})) as UpdateUserSuccessResponse | FailResponse;
 
 	if (!fetchWithRefreshResult.success) {
-		localStorage.removeItem('accessToken');
-		localStorage.removeItem('refreshToken');
+		removeAuthTokens();
 	}
 
 	return fetchWithRefreshResult;

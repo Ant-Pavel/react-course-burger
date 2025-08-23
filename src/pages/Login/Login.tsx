@@ -53,7 +53,6 @@ export const Login = (): React.JSX.Element => {
 							onChange={(e) => setPassword(e.target.value)}
 							placeholder='Пароль'
 							extraClass='mb-6'
-							icon={'ShowIcon'}
 							name={'password'}
 						/>
 						<Button

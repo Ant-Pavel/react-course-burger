@@ -9,9 +9,9 @@ import { Modal } from '@components/modal/modal.tsx';
 import { OrderDetails } from '@components/order-details/order-details.tsx';
 import { Preloader } from '@components/preloader/preloader';
 import { TIngredient } from '@utils/types.ts';
-import { fetchIngredients } from '../../services/ingredients';
-import { sendOrder } from '../../services/order';
-import { setIngredientDetails } from '../../services/ingredientDetails';
+import { fetchIngredients } from '@/services/ingredients';
+import { sendOrder } from '@/services/order';
+import { setIngredientDetails } from '@/services/ingredientDetails';
 import { Outlet, useNavigate } from 'react-router-dom';
 
 export const Home = (): React.JSX.Element => {
@@ -61,7 +61,7 @@ export const Home = (): React.JSX.Element => {
 
 	return (
 		<>
-			{isLoadingIngredients || isSendingOrder ? (
+			{isLoadingIngredients ? (
 				<Preloader />
 			) : (
 				<>
@@ -99,6 +99,16 @@ export const Home = (): React.JSX.Element => {
 								<p className='text text_type_main-medium'>
 									Ой. Ошибка создания заказа
 								</p>
+							</div>
+						</Modal>
+					)}
+					{isSendingOrder && (
+						<Modal closeHandler={() => setShowCreateOrderErr(false)}>
+							<div className='p-15 text-center'>
+								<p className='mb-10 text text_type_main-medium'>
+									Обрабатываем ваш заказ
+								</p>
+								<Preloader />
 							</div>
 						</Modal>
 					)}
