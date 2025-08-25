@@ -70,7 +70,6 @@ export const socketMiddleware = <R, S>(
 
 				socket.onmessage = (event) => {
 					try {
-						console.log('WebSocket message received:', event);
 						const data = JSON.parse(event.data);
 						if (
 							withTokenRefresh &&

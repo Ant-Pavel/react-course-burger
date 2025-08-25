@@ -16,17 +16,15 @@ export const Ingredient = (): React.JSX.Element => {
 	);
 
 	useEffect(() => {
-		const loadIngredients = async () => {
-			const ingredient = ingredients.find(
-				(ingr: TIngredient) => ingr._id === ingredientId
-			);
-			if (ingredient) {
-				setIngredient(ingredient);
-			} else {
-				navigate('/');
-			}
-		};
-		loadIngredients();
+		if (!ingredients.length) return;
+		const ingredient = ingredients.find(
+			(ingr: TIngredient) => ingr._id === ingredientId
+		);
+		if (ingredient) {
+			setIngredient(ingredient);
+		} else {
+			navigate('/404');
+		}
 	}, [dispatch, navigate, ingredientId, ingredients]);
 
 	if (isLoadingIngredients || !ingredient) {
