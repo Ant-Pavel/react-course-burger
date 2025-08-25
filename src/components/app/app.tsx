@@ -26,14 +26,13 @@ import { fetchIngredients } from '@/services/ingredients';
 
 export const App = (): React.JSX.Element => {
 	const location = useLocation();
-	console.log('location ', location);
 	const navigate = useNavigate();
 	const background: null | Location =
 		location.state && location.state.background;
 	const dispatch = useAppDispatch();
-	dispatch(checkIfUserAuthed());
 	useEffect(() => {
 		dispatch(fetchIngredients());
+		dispatch(checkIfUserAuthed());
 	}, [dispatch]);
 
 	const handleModalClose = () => {
