@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import styles from './Home.module.css';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -9,10 +9,10 @@ import { Modal } from '@components/modal/modal.tsx';
 import { OrderDetails } from '@components/order-details/order-details.tsx';
 import { Preloader } from '@components/preloader/preloader';
 import { TIngredient } from '@utils/types.ts';
-import { fetchIngredients } from '../../services/ingredients';
-import { sendOrder } from '../../services/order';
-import { setIngredientDetails } from '../../services/ingredientDetails';
+import { sendOrder } from '@/services/order';
+import { setIngredientDetails } from '@/services/ingredientDetails';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { resetConstructor } from '@/services/burgerConstructor';
 
 export const Home = (): React.JSX.Element => {
 	const dispatch = useAppDispatch();
@@ -21,20 +21,10 @@ export const Home = (): React.JSX.Element => {
 	const { ingredients, loading: isLoadingIngredients } = useAppSelector(
 		(state) => state.ingredients
 	);
-	const [showLoadIngredientsErr, setShowLoadIngredientsErr] = useState(false);
 	const [showCreateOrderErr, setShowCreateOrderErr] = useState(false);
 
 	const isSendingOrder = useAppSelector((state) => state.order.loading);
 	const user = useAppSelector((state) => state.auth.user);
-
-	useEffect(() => {
-		dispatch(fetchIngredients())
-			.unwrap()
-			.catch((err) => {
-				console.log(err);
-				setShowLoadIngredientsErr(true);
-			});
-	}, [dispatch]);
 
 	const onCreateOrderClick = async () => {
 		if (!user) {
@@ -44,6 +34,7 @@ export const Home = (): React.JSX.Element => {
 		try {
 			await dispatch(sendOrder()).unwrap();
 			setIsModalOrderOpen(true);
+			dispatch(resetConstructor());
 		} catch (error) {
 			console.error('Error sending order:', error);
 			setShowCreateOrderErr(true);
@@ -61,7 +52,7 @@ export const Home = (): React.JSX.Element => {
 
 	return (
 		<>
-			{isLoadingIngredients || isSendingOrder ? (
+			{isLoadingIngredients ? (
 				<Preloader />
 			) : (
 				<>
@@ -84,21 +75,22 @@ export const Home = (): React.JSX.Element => {
 							<OrderDetails />
 						</Modal>
 					)}
-					{showLoadIngredientsErr && (
-						<Modal closeHandler={() => setShowLoadIngredientsErr(false)}>
-							<div className='p-25 text-center'>
-								<p className='text text_type_main-medium'>
-									Ой. Ошибка загрузки ингредиентов
-								</p>
-							</div>
-						</Modal>
-					)}
 					{showCreateOrderErr && (
 						<Modal closeHandler={() => setShowCreateOrderErr(false)}>
 							<div className='p-25 text-center'>
 								<p className='text text_type_main-medium'>
 									Ой. Ошибка создания заказа
 								</p>
+							</div>
+						</Modal>
+					)}
+					{isSendingOrder && (
+						<Modal closeHandler={() => setShowCreateOrderErr(false)}>
+							<div className='p-15 text-center'>
+								<p className='mb-10 text text_type_main-medium'>
+									Обрабатываем ваш заказ
+								</p>
+								<Preloader />
 							</div>
 						</Modal>
 					)}

@@ -4,11 +4,11 @@ import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-component
 import { useAppSelector } from '@/services/store';
 
 export const OrderDetails = (): React.JSX.Element => {
-	const orderCode = useAppSelector((state) => state.order.orderCode);
+	const { orderNumber } = useAppSelector((state) => state.order);
 	return (
 		<div className={`${styles.order} pt-20`}>
 			<p className={`${styles.order__id}  mb-8 text text_type_digits-large`}>
-				{orderCode}
+				{orderNumber}
 			</p>
 			<p className='mb-15 text text_type_main-medium'>идентификатор заказа</p>
 			<div className='mb-15'>
