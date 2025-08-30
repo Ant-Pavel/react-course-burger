@@ -18,7 +18,7 @@ interface IAuthData {
 	isAuthChecked: boolean;
 }
 
-const initialState: IAuthData = {
+export const initialState: IAuthData = {
 	user: null,
 	isAuthChecked: false,
 };

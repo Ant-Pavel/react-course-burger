@@ -21,7 +21,7 @@ interface IOrdersState {
 	gotFirstMessage: boolean;
 }
 
-const initialState: IOrdersState = {
+export const initialState: IOrdersState = {
 	orders: [],
 	total: 0,
 	totalToday: 0,

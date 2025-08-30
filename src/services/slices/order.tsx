@@ -9,7 +9,7 @@ interface OrderState {
 	loading: boolean;
 }
 
-const initialState: OrderState = {
+export const initialState: OrderState = {
 	orderNumber: '',
 	order: null,
 	loading: false,
@@ -77,4 +77,4 @@ const orderSlice = createSlice({
 });
 
 export default orderSlice;
-const { setOrderData } = orderSlice.actions;
+export const { setOrderData } = orderSlice.actions;
