@@ -5,8 +5,8 @@ import {
 } from '@/services/actions/ordersUserSocketActions';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/store';
-import { wsOrdersUserUrl } from '@/utils/httpApi';
-import { getIngredientsDict } from '@/services/ingredients';
+import { wsOrdersUserUrl } from '@/utils/api/httpApi';
+import { getIngredientsDict } from '@/services/slices/ingredients';
 import { Preloader } from '@components/preloader/preloader';
 import { FeedOrdersList } from '@components/feed-orders-list/feed-orders-list';
 

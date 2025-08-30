@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { TOrder } from '../utils/types';
+import type { TOrder } from '../../utils/types';
 import { WebSocketStatus } from '@/utils/types';
 import {
 	onClose,
 	onError,
 	onMessage,
 	onOpen,
-} from './actions/ordersUserSocketActions';
+} from '../actions/ordersUserSocketActions';
 
 interface IOrdersState {
 	orders: TOrder[];

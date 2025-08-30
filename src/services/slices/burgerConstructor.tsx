@@ -1,8 +1,8 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { TIngredient } from '../utils/types';
+import type { TIngredient } from '../../utils/types';
 import { v4 as uuidv4 } from 'uuid';
-import type { RootState, AppDispatch } from './store';
+import type { RootState, AppDispatch } from '../store';
 
 export interface TConstructorIngredient extends TIngredient {
 	construcrorId: string;

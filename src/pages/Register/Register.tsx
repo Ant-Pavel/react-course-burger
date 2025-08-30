@@ -4,7 +4,7 @@ import {
 	Input,
 	Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { register } from '@/services/auth';
+import { register } from '@/services/slices/auth';
 import { useAppDispatch } from '@/services/store';
 import { NavLink } from 'react-router-dom';
 import { Preloader } from '@components/preloader/preloader';

@@ -4,7 +4,7 @@ import { useDrag, useDrop } from 'react-dnd';
 import type { XYCoord } from 'react-dnd';
 import { useAppDispatch } from '@/services/store';
 import type { AppDispatch } from '../../services/store';
-import { moveIngredient } from '../../services/burgerConstructor';
+import { moveIngredient } from '../../services/slices/burgerConstructor';
 
 interface IBurgerConstructorSortableIngredientWrapProps {
 	id: string;

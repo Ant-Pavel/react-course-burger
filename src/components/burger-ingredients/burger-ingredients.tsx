@@ -3,7 +3,7 @@ import styles from './burger-ingredients.module.css';
 import { TIngredient } from '@utils/types.ts';
 import { Ingredient } from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { selectIngredientsCount } from '../../services/burgerConstructor';
+import { selectIngredientsCount } from '../../services/slices/burgerConstructor';
 import { useAppSelector } from '@/services/store';
 import { NavLink, useLocation } from 'react-router';
 

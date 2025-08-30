@@ -9,10 +9,10 @@ import { Modal } from '@components/modal/modal.tsx';
 import { OrderDetails } from '@components/order-details/order-details.tsx';
 import { Preloader } from '@components/preloader/preloader';
 import { TIngredient } from '@utils/types.ts';
-import { sendOrder } from '@/services/order';
-import { setIngredientDetails } from '@/services/ingredientDetails';
+import { sendOrder } from '@/services/slices/order';
+import { setIngredientDetails } from '@/services/slices/ingredientDetails';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { resetConstructor } from '@/services/burgerConstructor';
+import { resetConstructor } from '@/services/slices/burgerConstructor';
 
 export const Home = (): React.JSX.Element => {
 	const dispatch = useAppDispatch();

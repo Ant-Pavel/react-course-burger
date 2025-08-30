@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from './store';
-import * as orderApi from '../utils/orderApi';
+import type { RootState } from '../store';
+import * as orderApi from '../../utils/api/orderApi';
 import { TOrder } from '@/utils/types';
 
 interface OrderState {

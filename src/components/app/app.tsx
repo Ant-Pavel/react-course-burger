@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styles from './app.module.css';
 import { AppHeader } from '@components/app-header/app-header.tsx';
 import { useAppDispatch } from '@/services/store';
-import { checkIfUserAuthed } from '@/services/auth';
+import { checkIfUserAuthed } from '@/services/slices/auth';
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { Home } from '@/pages/Home/Home';
 import { Modal } from '@/components/modal/modal';
@@ -22,7 +22,7 @@ import {
 	OnlyAuthed,
 	OnlyUnauthed,
 } from '@/components/protected-route/protected-route';
-import { fetchIngredients } from '@/services/ingredients';
+import { fetchIngredients } from '@/services/slices/ingredients';
 
 export const App = (): React.JSX.Element => {
 	const location = useLocation();

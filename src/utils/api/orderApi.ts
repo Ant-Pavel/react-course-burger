@@ -1,6 +1,6 @@
 import { fetchWithRefresh, request, removeAuthTokens } from './httpApi.ts';
 import type { FailResponse } from './httpApi.ts';
-import type { TIngredient, TOrder } from './types';
+import type { TIngredient, TOrder } from '../types.ts';
 
 type CreateOrderResponse = {
 	name: string;

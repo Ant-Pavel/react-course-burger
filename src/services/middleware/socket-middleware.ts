@@ -3,7 +3,7 @@ import type {
 	ActionCreatorWithPayload,
 	ActionCreatorWithoutPayload,
 } from '@reduxjs/toolkit';
-import { refreshToken } from '@/utils/httpApi';
+import { refreshToken } from '@/utils/api/httpApi';
 import type { RootState } from '../store';
 
 export type WSActions<R, S> = {

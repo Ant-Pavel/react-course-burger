@@ -4,9 +4,9 @@ import {
 	PayloadAction,
 	createSelector,
 } from '@reduxjs/toolkit';
-import type { TIngredient } from '../utils/types';
-import * as ingredientsApi from '@/utils/ingredientsApi';
-import { RootState } from './store';
+import type { TIngredient } from '../../utils/types';
+import * as ingredientsApi from '@/utils/api/ingredientsApi';
+import { RootState } from '../store';
 
 interface IngredientsState {
 	ingredients: TIngredient[];

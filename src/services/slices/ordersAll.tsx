@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import type { TOrder } from '../utils/types';
+import type { TOrder } from '../../utils/types';
 import {
 	OrderStatusCreated,
 	OrderStatusPending,
@@ -10,7 +10,7 @@ import {
 	onError,
 	onMessage,
 	onOpen,
-} from './actions/ordersAllSocketActions';
+} from '../actions/ordersAllSocketActions';
 
 interface IOrdersState {
 	orders: TOrder[];

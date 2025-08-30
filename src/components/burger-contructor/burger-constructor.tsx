@@ -4,7 +4,7 @@ import {
 	removeIngredient,
 	getTotalPriceSelector,
 	addIngredientById,
-} from '../../services/burgerConstructor';
+} from '../../services/slices/burgerConstructor.tsx';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import {

@@ -5,11 +5,14 @@ import {
 } from '@/services/actions/ordersAllSocketActions';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/services/store';
-import { wsOrdersAllUrl } from '@/utils/httpApi';
-import { getIngredientsDict } from '@/services/ingredients';
+import { wsOrdersAllUrl } from '@/utils/api/httpApi';
+import { getIngredientsDict } from '@/services/slices/ingredients';
 import { Preloader } from '@components/preloader/preloader';
 import { FeedOrdersList } from '@components/feed-orders-list/feed-orders-list';
-import { selectPendingOrders, selectCreatedOrders } from '@/services/ordersAll';
+import {
+	selectPendingOrders,
+	selectCreatedOrders,
+} from '@/services/slices/ordersAll';
 
 export const FeedPage = (): React.JSX.Element => {
 	const dispatch = useAppDispatch();

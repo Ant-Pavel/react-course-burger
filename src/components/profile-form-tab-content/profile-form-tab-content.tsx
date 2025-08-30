@@ -4,8 +4,8 @@ import {
 	Input,
 	Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { getUser, updateUserData } from '@/services/auth';
-import type { User } from '@/services/auth';
+import { getUser, updateUserData } from '@/services/slices/auth';
+import type { User } from '@/services/slices/auth';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import { Preloader } from '@components/preloader/preloader';
 
