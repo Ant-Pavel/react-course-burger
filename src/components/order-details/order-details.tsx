@@ -6,7 +6,9 @@ import { useAppSelector } from '@/services/store';
 export const OrderDetails = (): React.JSX.Element => {
 	const { orderNumber } = useAppSelector((state) => state.order);
 	return (
-		<div className={`${styles.order} pt-20`}>
+		<div
+			className={`${styles.order} pt-20`}
+			data-testid='orderDetailsModalContent'>
 			<p className={`${styles.order__id}  mb-8 text text_type_digits-large`}>
 				{orderNumber}
 			</p>

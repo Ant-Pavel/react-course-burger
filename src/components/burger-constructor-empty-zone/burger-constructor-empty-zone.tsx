@@ -11,9 +11,11 @@ export const BurgerConstructorEmptyZone = ({
 	type,
 	children,
 	droppable,
+	...rest
 }: IBurgerConstructorEmptyZoneProps): React.JSX.Element => {
 	return (
 		<div
+			{...rest}
 			className={`${styles.container}
 			${type === 'top' ? styles.containerTop : ''}
 			${type === 'bottom' ? styles.containerBottom : ''}

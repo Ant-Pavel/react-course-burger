@@ -15,7 +15,7 @@ export const IngredientModalContent = (): React.JSX.Element => {
 	if (!ingredient) return <Preloader />;
 
 	return (
-		<div className='mt-4'>
+		<div className='mt-4' data-testid='ingredient-modal-content'>
 			<IngredientDetails ingredient={ingredient} />
 		</div>
 	);

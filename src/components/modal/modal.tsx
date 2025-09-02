@@ -31,15 +31,22 @@ export const Modal = ({
 			clickHandler={closeHandler}
 			keyDownHandler={handleOverlayKeydown}>
 			<div
+				data-testid='modal-box'
 				tabIndex={-1}
 				ref={dialogContentRef}
 				className={`${styles.modal__box} p-10`}
 				onClick={(e) => e.stopPropagation()}>
-				<CloseIcon
-					type='primary'
-					className={styles.modal__closeicon}
-					onClick={closeHandler}
-				/>
+				<button
+					type='button'
+					className={styles.modal__closebtn}
+					data-testid='modal-close-button'>
+					<CloseIcon
+						type='primary'
+						className={styles.modal__closeicon}
+						onClick={closeHandler}
+						data-testid='modal-close-button'
+					/>
+				</button>
 				{children}
 			</div>
 		</ModalOverlay>,

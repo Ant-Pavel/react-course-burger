@@ -35,3 +35,38 @@
 //     }
 //   }
 // }
+
+Cypress.Commands.add('checkConstructorIsEmpty', () => {
+	cy.get('[data-testid=constructor-bun-top-block]').should('not.exist');
+	cy.get('[data-testid=constructor-bun-bottom-block]').should('not.exist');
+	cy.get('[data-testid=constructor-main-ingredients-block]').should(
+		'not.exist'
+	);
+});
+
+Cypress.Commands.add('checkDraggingPreparation', () => {
+	cy.visit('/');
+	cy.checkConstructorIsEmpty();
+});
+
+Cypress.Commands.add('dragIngredientToConstructor', (ingredientId) => {
+	cy.get(`[data-testidingredientid=${ingredientId}]`).trigger('dragstart');
+	cy.get('[data-testid=constructor]').trigger('drop');
+});
+
+Cypress.Commands.add(
+	'checkBunAddedToConstructor',
+	(dataTestId, ingredientName) => {
+		cy.get(`[data-testid=${dataTestId}]`)
+			.as('constructorTopBunDropZone')
+			.should('exist');
+		cy.get('@constructorTopBunDropZone').children().should('have.length', 1);
+		cy.get('@constructorTopBunDropZone').contains(ingredientName);
+	}
+);
+
+Cypress.Commands.add('checkIngredientsModalPreparation', () => {
+	cy.visit('/');
+	cy.get('[data-testid=ingredient-modal-content]').should('not.exist');
+	return cy.get('[data-testid=burger-ingredient]').first().click();
+});

@@ -28,7 +28,11 @@ export const Ingredient = ({
 	}));
 
 	return (
-		<article className={styles.ingridient} onClick={() => onClickHandler(id)}>
+		<article
+			className={styles.ingridient}
+			onClick={() => onClickHandler(id)}
+			data-testid='burger-ingredient'
+			data-testidingredientid={id}>
 			{count > 0 && <Counter count={count} size='default' extraClass='m-1' />}
 			<img
 				ref={dragRef}

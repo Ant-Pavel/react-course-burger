@@ -9,11 +9,19 @@
 	outline: none;
 }
 
-.modal__closeicon {
+.modal__closebtn {
 	position: absolute;
 	top: 60px;
 	right: 40px;
 	z-index: 1000;
+	margin: 0;
+	padding: 0;
+	line-height: 0;
+	background: none;
+	border: none;
+}
+
+.modal__closeicon {
 	width: 24px;
 	height: 24px;
 	color: #ffffff;

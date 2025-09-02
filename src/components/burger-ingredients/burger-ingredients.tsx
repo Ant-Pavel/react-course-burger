@@ -67,7 +67,7 @@ export const BurgerIngredients = ({
 	const tabClickHandler = (tabValue: string) => {
 		if (!headerRefs.current[tabValue]) return;
 		ingredientsTabContentRef.current?.scrollTo({
-			top: headerRefs.current[tabValue]?.offsetTop - 40,
+			top: (headerRefs.current[tabValue] as HTMLHeadingElement).offsetTop - 40,
 			behavior: 'smooth',
 		});
 	};
