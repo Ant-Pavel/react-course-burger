@@ -10,9 +10,9 @@ declare global {
 				dataTestId: string,
 				ingredientName: string
 			): void;
-			checkIngredientsModalPreparation(): Cypress.Chainable<
-				JQuery<HTMLElement>
-			>;
+			checkIngredientsModalPreparation(
+				ingredientModalContentSelector: string
+			): Cypress.Chainable<JQuery<HTMLElement>>;
 		}
 	}
 }

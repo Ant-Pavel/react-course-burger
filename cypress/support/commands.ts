@@ -65,8 +65,11 @@ Cypress.Commands.add(
 	}
 );
 
-Cypress.Commands.add('checkIngredientsModalPreparation', () => {
-	cy.visit('/');
-	cy.get('[data-testid=ingredient-modal-content]').should('not.exist');
-	return cy.get('[data-testid=burger-ingredient]').first().click();
-});
+Cypress.Commands.add(
+	'checkIngredientsModalPreparation',
+	(ingredientModalContentSelector) => {
+		cy.visit('/');
+		cy.get(ingredientModalContentSelector).should('not.exist');
+		return cy.get('[data-testid=burger-ingredient]').first().click();
+	}
+);

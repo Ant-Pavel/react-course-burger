@@ -2,6 +2,11 @@ import type {} from '../support/cypress';
 /// <reference types="cypress" />
 
 describe('template spec', () => {
+	const ingredientModalContentSelector =
+		'[data-testid=ingredient-modal-content]';
+	const ingredientIdAttrName = 'data-testidingredientid';
+	const modalCloseButtonSelector = '[data-testid=modal-close-button]';
+
 	beforeEach(() => {
 		cy.intercept('GET', 'api/ingredients', { fixture: 'ingredients.json' });
 		cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
@@ -12,33 +17,37 @@ describe('template spec', () => {
 	});
 
 	it("opening ingredient's modal", () => {
-		const element = cy.checkIngredientsModalPreparation();
-		element.invoke('attr', 'data-testidingredientid').then((ingredientId) => {
+		const element = cy.checkIngredientsModalPreparation(
+			ingredientModalContentSelector
+		);
+		element.invoke('attr', ingredientIdAttrName).then((ingredientId) => {
 			cy.location('pathname').should('equal', `/ingredient/${ingredientId}`);
-			cy.get('[data-testid=ingredient-modal-content]').should('be.visible');
-			cy.get('[data-testid=ingredient-modal-content]').contains(
-				'Детали ингредиента'
-			);
+			cy.get(ingredientModalContentSelector).should('be.visible');
+			cy.get(ingredientModalContentSelector).contains('Детали ингредиента');
 		});
 	});
 
 	it("closing ingredient's modal on close btn click", () => {
-		const element = cy.checkIngredientsModalPreparation();
-		element.invoke('attr', 'data-testidingredientid').then((ingredientId) => {
+		const element = cy.checkIngredientsModalPreparation(
+			ingredientModalContentSelector
+		);
+		element.invoke('attr', ingredientIdAttrName).then((ingredientId) => {
 			cy.location('pathname').should('equal', `/ingredient/${ingredientId}`);
-			cy.get('[data-testid=ingredient-modal-content]').should('exist');
-			cy.get('[data-testid=modal-close-button]').click();
-			cy.get('[data-testid=ingredient-modal-content]').should('not.exist');
+			cy.get(ingredientModalContentSelector).should('exist');
+			cy.get(modalCloseButtonSelector).click();
+			cy.get(ingredientModalContentSelector).should('not.exist');
 		});
 	});
 
 	it("closing ingredient's modal on overlay click", () => {
-		const element = cy.checkIngredientsModalPreparation();
-		element.invoke('attr', 'data-testidingredientid').then((ingredientId) => {
+		const element = cy.checkIngredientsModalPreparation(
+			ingredientModalContentSelector
+		);
+		element.invoke('attr', ingredientIdAttrName).then((ingredientId) => {
 			cy.location('pathname').should('equal', `/ingredient/${ingredientId}`);
-			cy.get('[data-testid=ingredient-modal-content]').should('exist');
+			cy.get(ingredientModalContentSelector).should('exist');
 			cy.get('[data-testid=modal-overlay]').click({ force: true });
-			cy.get('[data-testid=ingredient-modal-content]').should('not.exist');
+			cy.get(ingredientModalContentSelector).should('not.exist');
 		});
 	});
 
@@ -86,7 +95,7 @@ describe('template spec', () => {
 		cy.get(orderDetailModalSelector).should('exist');
 		cy.get(orderDetailModalSelector).contains('87592');
 
-		cy.get('[data-testid=modal-close-button]').click();
+		cy.get(modalCloseButtonSelector).click();
 		cy.checkConstructorIsEmpty();
 	});
 });
