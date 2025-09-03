@@ -8,13 +8,13 @@ import {
 import * as ordersAllSocketActions from './actions/ordersAllSocketActions';
 import * as ordersUserSocketActions from './actions/ordersUserSocketActions';
 
-import ingredientsReducer from './ingredients';
-import burgerConstructorReducer from './burgerConstructor';
-import orderReducer from './order';
-import ingredientDetailsReducer from './ingredientDetails';
-import authReducer from './auth';
-import ordersAll from './ordersAll';
-import ordersUser from './ordersUser';
+import ingredientsReducer from './slices/ingredients';
+import burgerConstructorReducer from './slices/burgerConstructor';
+import orderReducer from './slices/order';
+import ingredientDetailsReducer from './slices/ingredientDetails';
+import authReducer from './slices/auth';
+import ordersAll from './slices/ordersAll';
+import ordersUser from './slices/ordersUser';
 import { socketMiddleware } from './middleware/socket-middleware';
 
 const socketMiddlewareAllOrders = socketMiddleware(

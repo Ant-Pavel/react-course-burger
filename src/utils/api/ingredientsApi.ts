@@ -1,5 +1,5 @@
 import { request } from './httpApi.ts';
-import type { TIngredient } from './types';
+import type { TIngredient } from '../types.ts';
 
 type GetIngredientsResponse = {
 	success: boolean;

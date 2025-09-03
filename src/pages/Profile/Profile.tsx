@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Profile.module.css';
 
-import { logout } from '@/services/auth';
+import { logout } from '@/services/slices/auth';
 
 import { useAppDispatch } from '@/services/store';
 import { NavLink, Outlet, matchRoutes } from 'react-router-dom';

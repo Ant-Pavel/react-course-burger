@@ -1,11 +1,11 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { TIngredient } from '../utils/types';
+import type { TIngredient } from '../../utils/types';
 import { v4 as uuidv4 } from 'uuid';
-import type { RootState, AppDispatch } from './store';
+import type { RootState, AppDispatch } from '../store';
 
 export interface TConstructorIngredient extends TIngredient {
-	construcrorId: string;
+	constructorId: string;
 }
 
 interface IBurgerConstructorState {
@@ -13,7 +13,7 @@ interface IBurgerConstructorState {
 	ingredients: TConstructorIngredient[];
 }
 
-const initialState: IBurgerConstructorState = {
+export const initialState: IBurgerConstructorState = {
 	bun: null,
 	ingredients: [],
 };
@@ -32,9 +32,9 @@ export const addIngredientById =
 		}
 
 		if (ingredient.type === 'bun') {
-			dispatch(setBun({ ...ingredient, construcrorId: uuidv4() }));
+			dispatch(setBun({ ...ingredient, constructorId: uuidv4() }));
 		} else {
-			dispatch(addIngredient({ ...ingredient, construcrorId: uuidv4() }));
+			dispatch(addIngredient({ ...ingredient, constructorId: uuidv4() }));
 		}
 	};
 
@@ -53,7 +53,7 @@ const burgerConstructorSlice = createSlice({
 		},
 		removeIngredient: (state, action: PayloadAction<string>) => {
 			state.ingredients = state.ingredients.filter(
-				(ingredient) => ingredient.construcrorId !== action.payload
+				(ingredient) => ingredient.constructorId !== action.payload
 			);
 		},
 		moveIngredient: (

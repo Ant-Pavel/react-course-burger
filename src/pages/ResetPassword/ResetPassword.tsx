@@ -5,7 +5,7 @@ import {
 	Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { resetPasswordVerification } from '@/utils/authApi';
+import { resetPasswordVerification } from '@/utils/api/authApi';
 import { Preloader } from '@components/preloader/preloader';
 
 export const ResetPassword = (): React.JSX.Element => {

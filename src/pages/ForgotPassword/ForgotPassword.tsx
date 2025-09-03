@@ -5,7 +5,7 @@ import {
 	Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { resetPassword } from '@/utils/authApi';
+import { resetPassword } from '@/utils/api/authApi';
 import { Preloader } from '@components/preloader/preloader';
 
 export const ForgotPassword = (): React.JSX.Element => {

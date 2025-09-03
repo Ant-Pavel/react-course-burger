@@ -4,16 +4,16 @@ import {
 	PayloadAction,
 	createSelector,
 } from '@reduxjs/toolkit';
-import type { TIngredient } from '../utils/types';
-import * as ingredientsApi from '@/utils/ingredientsApi';
-import { RootState } from './store';
+import type { TIngredient } from '../../utils/types';
+import * as ingredientsApi from '@/utils/api/ingredientsApi';
+import { RootState } from '../store';
 
 interface IngredientsState {
 	ingredients: TIngredient[];
 	loading: boolean;
 }
 
-const initialState: IngredientsState = {
+export const initialState: IngredientsState = {
 	ingredients: [],
 	loading: false,
 };
@@ -38,17 +38,7 @@ const ingredientsSlice = createSlice({
 		},
 	},
 	selectors: {
-		// getIngredientById: (state, id: string) =>
-		// 	state.ingredients.find((ingredient) => ingredient._id === id),
 		getIngredients: (state) => state.ingredients,
-		// getIngredientsDict: (state) =>
-		// 	state.ingredients.reduce(
-		// 		(acc, ingredient) => {
-		// 			acc[ingredient._id] = ingredient;
-		// 			return acc;
-		// 		},
-		// 		{} as Record<TIngredient['_id'], TIngredient>
-		// 	),
 	},
 	extraReducers: (builder) => {
 		builder
@@ -66,7 +56,7 @@ const ingredientsSlice = createSlice({
 });
 
 export default ingredientsSlice;
-const { setIngredients } = ingredientsSlice.actions;
+export const { setIngredients } = ingredientsSlice.actions;
 export const { getIngredients } = ingredientsSlice.selectors;
 
 export const getIngredientsDict = createSelector(

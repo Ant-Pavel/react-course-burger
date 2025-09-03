@@ -5,7 +5,7 @@ import {
 	logOut,
 	register as registerApi,
 	updateUserData as updateUserDataApi,
-} from '../utils/authApi';
+} from '../../utils/api/authApi';
 
 export interface User {
 	email: string;
@@ -18,7 +18,7 @@ interface IAuthData {
 	isAuthChecked: boolean;
 }
 
-const initialState: IAuthData = {
+export const initialState: IAuthData = {
 	user: null,
 	isAuthChecked: false,
 };

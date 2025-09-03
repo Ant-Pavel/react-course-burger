@@ -1,6 +1,6 @@
 import { useAppSelector } from '@/services/store';
 import { useParams } from 'react-router-dom';
-import { getIngredientById } from '../../services/ingredients';
+import { getIngredientById } from '../../services/slices/ingredients';
 import { IngredientDetails } from '../ingredient-details/ingredient-details';
 import { Preloader } from '../preloader/preloader';
 
@@ -15,7 +15,7 @@ export const IngredientModalContent = (): React.JSX.Element => {
 	if (!ingredient) return <Preloader />;
 
 	return (
-		<div className='mt-4'>
+		<div className='mt-4' data-testid='ingredient-modal-content'>
 			<IngredientDetails ingredient={ingredient} />
 		</div>
 	);

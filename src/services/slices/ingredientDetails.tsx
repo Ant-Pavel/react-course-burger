@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TIngredient } from '../utils/types';
+import { TIngredient } from '../../utils/types';
 
 interface IIngredientDetailsState {
 	ingredientDetails: null | Pick<
@@ -8,7 +8,7 @@ interface IIngredientDetailsState {
 	>;
 }
 
-const initialState: IIngredientDetailsState = {
+export const initialState: IIngredientDetailsState = {
 	ingredientDetails: null,
 };
 

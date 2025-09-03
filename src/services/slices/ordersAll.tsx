@@ -1,5 +1,5 @@
 import { createSlice, createSelector } from '@reduxjs/toolkit';
-import type { TOrder } from '../utils/types';
+import type { TOrder } from '../../utils/types';
 import {
 	OrderStatusCreated,
 	OrderStatusPending,
@@ -10,7 +10,7 @@ import {
 	onError,
 	onMessage,
 	onOpen,
-} from './actions/ordersAllSocketActions';
+} from '../actions/ordersAllSocketActions';
 
 interface IOrdersState {
 	orders: TOrder[];
@@ -21,7 +21,7 @@ interface IOrdersState {
 	gotFirstMessage: boolean;
 }
 
-const initialState: IOrdersState = {
+export const initialState: IOrdersState = {
 	orders: [],
 	total: 0,
 	totalToday: 0,

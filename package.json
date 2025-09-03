@@ -17,7 +17,8 @@
 		"cypress:open": "cypress open",
 		"cypress:run": "cypress run",
 		"test": "vitest",
-		"test:ui": "vitest --ui"
+		"test:ui": "vitest --ui",
+		"deploy-script": "npm run build && scp -r ./dist/* pavel@158.160.142.252:/home/pavel/stellar-frontend"
 	},
 	"dependencies": {
 		"@babel/runtime": "^7.25.4",

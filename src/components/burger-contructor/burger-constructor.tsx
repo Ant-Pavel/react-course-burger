@@ -4,7 +4,7 @@ import {
 	removeIngredient,
 	getTotalPriceSelector,
 	addIngredientById,
-} from '../../services/burgerConstructor';
+} from '@/services/slices/burgerConstructor';
 import { useDrop } from 'react-dnd';
 import { useAppDispatch, useAppSelector } from '@/services/store';
 import {
@@ -16,6 +16,7 @@ import {
 import { BurgerConstructorEmptyZone } from '../burger-constructor-empty-zone/burger-constructor-empty-zone.tsx';
 import { BurgerConstructorSortableIngredientWrap } from '../burger-constructor-sortable-ingredient-wrap/burger-constructor-sortable-ingredient-wrap.tsx';
 import type { TDraggingIngredientItem } from '@/utils/types.ts';
+import { UnknownAction } from '@reduxjs/toolkit';
 
 type TBurgerConstructorProps = {
 	onCreateOrderClick: () => void;
@@ -36,7 +37,7 @@ export const BurgerConstructor = ({
 	>(() => ({
 		accept: 'ingredient',
 		drop: (item: TDraggingIngredientItem) => {
-			dispatch(addIngredientById(item.id));
+			dispatch(addIngredientById(item.id) as unknown as UnknownAction);
 		},
 		collect: (monitor) => ({
 			draggedItem: monitor.getItem(),
@@ -51,11 +52,16 @@ export const BurgerConstructor = ({
 
 	return (
 		<section className={`${styles.burger_constructor} pb-10`}>
-			<div className={styles.ingredients} ref={dropRef}>
+			<div
+				className={styles.ingredients}
+				ref={dropRef}
+				data-testid='constructor'>
 				{
 					<>
 						{bun ? (
-							<div className={`${styles.edgeIngredientWrap} pr-4`}>
+							<div
+								className={`${styles.edgeIngredientWrap} pr-4`}
+								data-testid='constructor-bun-top-block'>
 								<ConstructorElement
 									type='top'
 									isLocked={true}
@@ -66,17 +72,20 @@ export const BurgerConstructor = ({
 							</div>
 						) : (
 							<BurgerConstructorEmptyZone
+								data-testid='constructor-no-bun-top-block'
 								type='top'
 								droppable={draggedItem && draggedItem.type === 'bun'}>
 								Выберите булку
 							</BurgerConstructorEmptyZone>
 						)}
 						{ingredients.length ? (
-							<div className={styles.middleIngredientsWrap}>
+							<div
+								className={styles.middleIngredientsWrap}
+								data-testid='constructor-main-ingredients-block'>
 								{ingredients.map((el, index) => (
 									<BurgerConstructorSortableIngredientWrap
-										key={el.construcrorId}
-										id={el.construcrorId}
+										key={el.constructorId}
+										id={el.constructorId}
 										index={index}>
 										<div className={styles.middleIngredientWrap}>
 											<DragIcon type='primary' />
@@ -85,7 +94,7 @@ export const BurgerConstructor = ({
 												price={el.price}
 												thumbnail={el.image}
 												handleClose={() =>
-													removeIngredientHandler(el.construcrorId)
+													removeIngredientHandler(el.constructorId)
 												}
 											/>
 										</div>
@@ -94,12 +103,15 @@ export const BurgerConstructor = ({
 							</div>
 						) : (
 							<BurgerConstructorEmptyZone
+								data-testid='constructor-no-main-ingredients-block'
 								droppable={draggedItem && draggedItem.type !== 'bun'}>
 								Выберите начинку
 							</BurgerConstructorEmptyZone>
 						)}
 						{bun ? (
-							<div className={`${styles.edgeIngredientWrap} pr-4`}>
+							<div
+								className={`${styles.edgeIngredientWrap} pr-4`}
+								data-testid='constructor-bun-bottom-block'>
 								<ConstructorElement
 									type='bottom'
 									isLocked={true}
@@ -110,6 +122,7 @@ export const BurgerConstructor = ({
 							</div>
 						) : (
 							<BurgerConstructorEmptyZone
+								data-testid='constructor-no-bun-bottom-block'
 								type='bottom'
 								droppable={draggedItem && draggedItem.type === 'bun'}>
 								Выберите булку
@@ -126,6 +139,7 @@ export const BurgerConstructor = ({
 					<CurrencyIcon className={styles.priceInfo__icon} type='primary' />
 				</div>
 				<Button
+					data-testid='constructor-order-button'
 					onClick={onCreateOrderClick}
 					htmlType='button'
 					type='primary'

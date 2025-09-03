@@ -7,9 +7,9 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './order-info.module.css';
 import { useParams } from 'react-router-dom';
-import { loadOrder } from '@/services/order';
+import { loadOrder } from '@/services/slices/order';
 import { orderStatusesTranslation } from '@/utils/types';
-import { getIngredientsDict } from '@/services/ingredients';
+import { getIngredientsDict } from '@/services/slices/ingredients';
 
 type IOrderInfoProps = {
 	insideModal?: boolean;

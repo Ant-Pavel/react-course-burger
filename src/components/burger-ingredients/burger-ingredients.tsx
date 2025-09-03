@@ -3,7 +3,7 @@ import styles from './burger-ingredients.module.css';
 import { TIngredient } from '@utils/types.ts';
 import { Ingredient } from '../ingredient/ingredient';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { selectIngredientsCount } from '../../services/burgerConstructor';
+import { selectIngredientsCount } from '../../services/slices/burgerConstructor';
 import { useAppSelector } from '@/services/store';
 import { NavLink, useLocation } from 'react-router';
 
@@ -67,7 +67,7 @@ export const BurgerIngredients = ({
 	const tabClickHandler = (tabValue: string) => {
 		if (!headerRefs.current[tabValue]) return;
 		ingredientsTabContentRef.current?.scrollTo({
-			top: headerRefs.current[tabValue]?.offsetTop - 40,
+			top: (headerRefs.current[tabValue] as HTMLHeadingElement).offsetTop - 40,
 			behavior: 'smooth',
 		});
 	};
